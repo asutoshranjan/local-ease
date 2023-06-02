@@ -14,7 +14,12 @@ class _SubscribedPageState extends State<SubscribedPage> {
       appBar: AppBar(
         title: Text("Your Favorite Picks"),
       ),
-      body: Text("Subscribed"),
+      body: Column(
+        children: [
+          Text("Subscribed"),
+          ElevatedButton(onPressed: (){}, child: Text("View Subscription")),
+        ],
+      ),
     );
   }
 }

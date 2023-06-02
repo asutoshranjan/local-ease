@@ -1,17 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:local_ease/screens/nearyou_page.dart';
-import 'package:local_ease/screens/profile_page.dart';
-import 'package:local_ease/screens/subscribed_page.dart';
+import 'package:local_ease/seller_screens/account_page.dart';
+import 'package:local_ease/seller_screens/insights_page.dart';
+import 'package:local_ease/seller_screens/your_store_page.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class SellerHomePage extends StatefulWidget {
+  const SellerHomePage({Key? key}) : super(key: key);
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<SellerHomePage> createState() => _SellerHomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _SellerHomePageState extends State<SellerHomePage> {
   int _selectedIndex = 0;
 
   /// index Set State
@@ -26,13 +26,13 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: <Widget>[
         /// NearYou Page
-        const NearYouPage(),
+        const StoreListingPage(),
 
         /// Subscribed Page
-        const SubscribedPage(),
+        const InsightsPage(),
 
         /// Profile Page
-        const ProfilePage(),
+        const SellerAccountPage(),
       ].elementAt(_selectedIndex),
 
       ///Bottom Nav Bar of Main app
@@ -43,12 +43,12 @@ class _HomePageState extends State<HomePage> {
         showUnselectedLabels: true,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.map),
-            label: 'Near You',
+            icon: Icon(CupertinoIcons.cart),
+            label: 'Your Store',
           ),
           BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.star),
-            label: 'Subscribed',
+            icon: Icon(CupertinoIcons.graph_square),
+            label: 'Insights',
           ),
           BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.person),

@@ -1,6 +1,6 @@
 import 'package:appwrite/appwrite.dart';
 import 'package:flutter/material.dart';
-import 'package:local_ease/screens/home_page.dart';
+import 'package:local_ease/launch_screens/choose_account_type.dart';
 import 'package:local_ease/theme/app-theme.dart';
 import 'package:local_ease/utils/credentials.dart';
 
@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'LocalEase',
       theme: AppTheme.lightTheme,
-      home: const HomePage(),
+      home: ChooseAccountType(),
     );
   }
 }

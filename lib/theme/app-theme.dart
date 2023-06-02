@@ -13,7 +13,7 @@ final TextTheme textTheme = TextTheme(
     fontWeight: FontWeight.w500,
   ),
   titleSmall: GoogleFonts.poppins(
-    fontSize: 15,
+    fontSize: 16.5,
     fontWeight: FontWeight.w600,
   ),
   displayLarge: GoogleFonts.poppins(
@@ -53,6 +53,13 @@ abstract class AppTheme {
         foregroundColor: AppColors.black,
         elevation: 0),
     colorScheme: const ColorScheme.light(),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: AppColors.tabPink,
+        foregroundColor: AppColors.white,
+        textStyle: textTheme.titleSmall,
+      ),
+    ),
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
         backgroundColor: AppColors.white,
         elevation: 0,
