@@ -1,9 +1,12 @@
 import 'package:appwrite/appwrite.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:local_ease/apis/APIs.dart';
 import 'package:local_ease/main.dart';
 import 'package:local_ease/theme/colors.dart';
 import 'package:local_ease/utils/credentials.dart';
+
+import '../auth/login_screen.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -22,6 +25,19 @@ class _ProfilePageState extends State<ProfilePage> {
         actions: [
           IconButton(
             onPressed: () {
+
+              APIs.instance.logout();
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(const SnackBar(content: Text('Logged Out')));
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const LoginPage(),
+                ),
+              );
+
+
+
             },
             icon: const Icon(Icons.logout),
           ),
@@ -44,6 +60,42 @@ class _ProfilePageState extends State<ProfilePage> {
                           Text(snapshot.data!.data['notifications'].toString()),
                     )
                   : Center(child: CircularProgressIndicator());
+            },
+          ),
+
+
+          FutureBuilder(
+            future: APIs.account.get(),
+            builder: (ctx, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                if (snapshot.hasError) {
+                  return Center(
+                    child: Text(
+                      '${snapshot.error} occurred',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  );
+                } else if (snapshot.hasData) {
+                  return Center(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          snapshot.data!.name,
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        Text(
+                          snapshot.data!.email,
+                          style: TextStyle(fontSize: 18),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+              }
+              return Center(
+                child: CircularProgressIndicator(),
+              );
             },
           ),
 

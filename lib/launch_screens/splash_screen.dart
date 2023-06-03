@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:local_ease/apis/APIs.dart';
 import 'package:local_ease/launch_screens/choose_account_type.dart';
 import 'package:local_ease/theme/app-theme.dart';
 import 'package:local_ease/theme/colors.dart';
+
+import '../auth/login_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -16,14 +19,31 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Future.delayed(const Duration(milliseconds: 3500), () async {
-      Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (_) => ChooseAccountType(),
-              ),
-            );
+      getUserStatus();
     });
   }
+
+
+  void getUserStatus() async {
+    await APIs.instance.isLoggedIn().then((isLoggedIn) {
+      if (isLoggedIn) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (_) => const ChooseAccountType(),
+          ),
+        );
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (_) => const LoginPage(),
+          ),
+        );
+      }
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
