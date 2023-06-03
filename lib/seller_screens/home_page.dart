@@ -25,13 +25,13 @@ class _SellerHomePageState extends State<SellerHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: <Widget>[
-        /// NearYou Page
+        /// Your Store Page
         const StoreListingPage(),
 
-        /// Subscribed Page
+        /// Insights Page
         const InsightsPage(),
 
-        /// Profile Page
+        /// Account Page
         const SellerAccountPage(),
       ].elementAt(_selectedIndex),
 

@@ -10,6 +10,10 @@ class ManageStoreItems extends StatefulWidget {
 class _ManageStoreItemsState extends State<ManageStoreItems> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Manage Store Items"),
+      ),
+    );
   }
 }

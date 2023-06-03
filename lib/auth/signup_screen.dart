@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:local_ease/auth/login_screen.dart';
+import 'package:local_ease/helpers/dialogs.dart';
 import 'package:local_ease/launch_screens/choose_account_type.dart';
+import 'package:local_ease/widgets/textfields.dart';
 
 import '../../apis/APIs.dart';
 
@@ -16,6 +18,7 @@ class _SignUpPageState extends State<SignUpPage> {
   String? name;
   String? email;
   String? password;
+  bool obscureText = true;
 
   @override
   Widget build(BuildContext context) {
@@ -29,33 +32,57 @@ class _SignUpPageState extends State<SignUpPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            TextField(
-              decoration: const InputDecoration(labelText: "Email"),
+
+            TextFieldInput(
+              title: 'Email',
+              hintText: 'Email',
               onChanged: (val) {
                 setState(() {
                   email = val;
                 });
               },
             ),
-            TextField(
-              decoration: const InputDecoration(labelText: "Password"),
+            const SizedBox(
+              height: 25,
+            ),
+            TextFieldInput(
+              title: 'Password',
+              hintText: '8 character at least',
+              obscureText: obscureText,
+              suffixIcon: IconButton(
+                onPressed: () {
+                  setState(() {
+                    obscureText = !obscureText;
+                  });
+                },
+                icon: Icon(
+                  obscureText ? Icons.visibility : Icons.visibility_off,
+                ),
+              ),
               onChanged: (val) {
                 setState(() {
                   password = val;
                 });
               },
             ),
-            TextField(
-              decoration: const InputDecoration(labelText: "Name"),
+            const SizedBox(
+              height: 25,
+            ),
+            TextFieldInput(
+              title: 'Name',
+              hintText: 'Name',
               onChanged: (val) {
                 setState(() {
                   name = val;
                 });
               },
             ),
+            const SizedBox(
+              height: 30,
+            ),
             ElevatedButton(
               onPressed: () async {
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Signing you up...')));
+                Dialogs.showSnackbar(context, 'Signing you up...');
                 try {
                   await APIs.instance.signUpEmailPassword(
                     email!,
@@ -63,7 +90,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     name!,
                   ).then((result) {
                     if(result) {
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('New Account Created..')));
+                      Dialogs.showSnackbar(context, 'New Account Created..');
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
@@ -73,7 +100,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     }
                   });
                 } catch (e) {
-                  ScaffoldMessenger.of(context).showSnackBar( SnackBar(content: Text(e.toString())));
+                  Dialogs.showSnackbar(context, e.toString());
                 }
               },
               child: Text("Sign Up"),

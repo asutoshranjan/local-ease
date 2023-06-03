@@ -102,7 +102,16 @@ class _NearYouPageState extends State<NearYouPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Home"),
+        // title: Container(
+        //   height: 38,
+        //   width: 180,
+        //
+        //   decoration: BoxDecoration(
+        //     color: Colors.pink,
+        //     borderRadius: BorderRadius.circular(8),
+        //   ),
+        // ),
+        title: const Text('Home'),
         actions: [
           IconButton(
             onPressed: () {
@@ -120,6 +129,7 @@ class _NearYouPageState extends State<NearYouPage> {
 
 
       body:  ListView.builder(
+          physics: const BouncingScrollPhysics(),
           itemCount: items.length,
           itemBuilder: (BuildContext context, int index) {
             Map<String, dynamic> current_obj = items[index];

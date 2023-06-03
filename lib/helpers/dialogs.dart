@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Dialogs {
-  static void showSnackbar(BuildContext context, String msg, Color clr) {
+  static void showSnackbar(BuildContext context, String msg) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        backgroundColor: clr,
         content: Text(
           msg,
           style: GoogleFonts.poppins(
-            fontSize: 15,
+            fontSize: 16,
+            color: Colors.white,
             fontWeight: FontWeight.w500,
           ),
         ),

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:local_ease/auth/signup_screen.dart';
+import 'package:local_ease/helpers/dialogs.dart';
 import 'package:local_ease/launch_screens/choose_account_type.dart';
 
 import '../../apis/APIs.dart';
+import '../widgets/textfields.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -15,6 +17,7 @@ class _LoginPageState extends State<LoginPage> {
 
   String? email;
   String? password;
+  bool obscureText = true;
 
   @override
   Widget build(BuildContext context) {
@@ -28,32 +31,51 @@ class _LoginPageState extends State<LoginPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            TextField(
-              decoration: const InputDecoration(labelText: "Email"),
+            TextFieldInput(
+              title: 'Email',
+              hintText: 'Email',
               onChanged: (val) {
                 setState(() {
                   email = val;
                 });
               },
             ),
-            TextField(
-              decoration: const InputDecoration(labelText: "Password"),
+            const SizedBox(
+              height: 25,
+            ),
+            TextFieldInput(
+              title: 'Password',
+              hintText: 'Password',
+              obscureText: obscureText,
+              suffixIcon: IconButton(
+                onPressed: () {
+                  setState(() {
+                    obscureText = !obscureText;
+                  });
+                },
+                icon: Icon(
+                  obscureText ? Icons.visibility : Icons.visibility_off,
+                ),
+              ),
               onChanged: (val) {
                 setState(() {
                   password = val;
                 });
               },
             ),
+            const SizedBox(
+              height: 30,
+            ),
             ElevatedButton(
               onPressed: () async {
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Logging in...')));
+                Dialogs.showSnackbar(context, 'Logging in...');
                 try {
                   await APIs.instance.loginEmailPassword(
                     email!,
                     password!,
                   ).then((result) {
                     if(result) {
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Logged in')));
+                      Dialogs.showSnackbar(context, 'Logged in!');
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
@@ -63,7 +85,7 @@ class _LoginPageState extends State<LoginPage> {
                     }
                   });
                 } catch (e) {
-                  ScaffoldMessenger.of(context).showSnackBar( SnackBar(content: Text(e.toString())));
+                  Dialogs.showSnackbar(context, e.toString());
                 }
               },
               child: Text("Login"),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:local_ease/seller_screens/manage_store_items.dart';
 import 'package:local_ease/theme/app-theme.dart';
 import 'package:local_ease/theme/colors.dart';
+import 'package:local_ease/widgets/textfields.dart';
 
 class StoreListingPage extends StatefulWidget {
   const StoreListingPage({Key? key}) : super(key: key);
@@ -14,10 +16,20 @@ class _StoreListingPageState extends State<StoreListingPage> {
   TextEditingController storeNameController = TextEditingController();
   TextEditingController storeLocationController = TextEditingController();
 
-
-  List storesItem = ["Apples", "Apricot", "Plum", "Watermelon", "Orange", "Pineapple", "Blueberry", "Papaya", "Hihfhhq ehf", "ijfej9efj", "iojfiw", "kowj"];
-
-
+  List storesItem = [
+    "Apples",
+    "Apricot",
+    "Plum",
+    "Watermelon",
+    "Orange",
+    "Pineapple",
+    "Blueberry",
+    "Papaya",
+    "Hihfhhq ehf",
+    "ijfej9efj",
+    "iojfiw",
+    "kowj"
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -70,50 +82,23 @@ class _StoreListingPageState extends State<StoreListingPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: isOpen
                   ? [
-                      // Center(
-                      //   child: Text(
-                      //     'Login',
-                      //     style: Theme.of(context)
-                      //         .textTheme
-                      //         .titleLarge
-                      //         ?.copyWith(color: AppColors.pink, fontSize: 35),
-                      //   ),
-                      // ),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
-                      SizedBox(
-                        width: double.infinity,
-                        height: 60,
-                        child: TextField(
-                          controller: storeNameController,
-                          decoration: InputDecoration(
-                            labelText: 'Store Name',
-                            hintText: 'Hillside Fruits',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                        ),
+                      TextFieldInput(
+                        title: 'Store Name',
+                        hintText: 'Hillside Fruits',
+                        onChanged: (val) {},
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
-                      SizedBox(
-                        width: double.infinity,
-                        height: 60,
-                        child: TextField(
-                          controller: storeLocationController,
-                          decoration: InputDecoration(
-                            labelText: 'Location',
-                            hintText: '47 W 13th St, NYC',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                        ),
+                      TextFieldInput(
+                        title: 'Location',
+                        hintText: '47 W 13th St, NYC',
+                        onChanged: (val) {},
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 25,
                       ),
 
@@ -126,19 +111,33 @@ class _StoreListingPageState extends State<StoreListingPage> {
                         spacing: 8.0, // gap between adjacent chips
                         runSpacing: 4.0, // gap between lines
                         children: <Widget>[
-                          for(String item in storesItem)
+                          for (String item in storesItem)
                             Chip(
                               avatar: CircleAvatar(
                                   backgroundColor: Colors.blue.shade900,
-                                  child: const Text('ML')),
-                              label: Text(item, style: textTheme.displayLarge,),
+                                  child: const Text('IN')),
+                              label: Text(
+                                item,
+                                style: textTheme.displayLarge,
+                              ),
                             ),
                         ],
                       ),
 
-                ElevatedButton(onPressed: (){}, child: Text("Manage Items")),
-                SizedBox(height: 20,),
-                ElevatedButton(onPressed: (){}, child: Text("Update")),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const ManageStoreItems(),
+                              ));
+                        },
+                        child: Text("Manage Items"),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      ElevatedButton(onPressed: () {}, child: Text("Update")),
 
                       // SizedBox(
                       //   width: 0.5 * screenWidth,
