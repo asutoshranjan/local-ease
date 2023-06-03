@@ -1,4 +1,5 @@
 import 'package:appwrite/appwrite.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:local_ease/main.dart';
 import 'package:local_ease/theme/colors.dart';
@@ -18,6 +19,13 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("LocalEase Profile"),
+        actions: [
+          IconButton(
+            onPressed: () {
+            },
+            icon: const Icon(Icons.logout),
+          ),
+        ],
       ),
       body: Column(
         children: [
