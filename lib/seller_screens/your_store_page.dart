@@ -99,6 +99,16 @@ class _StoreListingPageState extends State<StoreListingPage> {
                         onChanged: (val) {},
                       ),
                       const SizedBox(
+                        height: 20,
+                      ),
+                      TextFieldInput(
+                        title: 'About',
+                        hintText: 'Get freshness of hillside fruits',
+                        onChanged: (val) {},
+                        maxLines: 3,
+                        maxLength: 100,
+                      ),
+                      const SizedBox(
                         height: 25,
                       ),
 
@@ -123,6 +133,8 @@ class _StoreListingPageState extends State<StoreListingPage> {
                             ),
                         ],
                       ),
+
+
 
                       ElevatedButton(
                         onPressed: () {
