@@ -28,7 +28,7 @@ class _SignUpPageState extends State<SignUpPage> {
         centerTitle: true,
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 15),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -43,7 +43,7 @@ class _SignUpPageState extends State<SignUpPage> {
               },
             ),
             const SizedBox(
-              height: 25,
+              height: 16,
             ),
             TextFieldInput(
               title: 'Password',
@@ -66,7 +66,7 @@ class _SignUpPageState extends State<SignUpPage> {
               },
             ),
             const SizedBox(
-              height: 25,
+              height: 16,
             ),
             TextFieldInput(
               title: 'Name',

@@ -60,6 +60,7 @@ abstract class AppTheme {
         textStyle: textTheme.titleSmall,
       ),
     ),
+    progressIndicatorTheme: const ProgressIndicatorThemeData(color: AppColors.pink),
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
         backgroundColor: AppColors.white,
         elevation: 0,

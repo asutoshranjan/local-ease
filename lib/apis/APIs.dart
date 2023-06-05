@@ -1,5 +1,7 @@
 import 'package:appwrite/appwrite.dart';
 import 'package:appwrite/models.dart' as models;
+import 'package:local_ease/models/shop_model.dart';
+import 'package:local_ease/utils/credentials.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
@@ -16,7 +18,7 @@ class APIs {
 
   static final databases = Databases(client);
 
-  var uuid = Uuid();
+  var uuid = Uuid(); // Generates UniqueIDs
 
   Future<String?> getUserID() async {
     final SharedPreferences prefs = await _prefs;
@@ -79,5 +81,61 @@ class APIs {
     prefs.remove('email');
     prefs.remove('password');
   }
+
+
+
+
+
+  /// Database CRUD Operation Functions
+
+  // Create Store
+  Future<void> createShop(
+      {required ShopModel currentShop,}) async {
+    try {
+      await getUserID().then((userId) async {
+        String docId = uuid.v1();
+        ShopModel myShop = ShopModel(
+          name: 'New Shop',
+        );
+        await databases.createDocument(
+          databaseId: Credentials.DatabaseId,
+          collectionId: Credentials.ShopsCollectionId,
+          documentId: docId,
+          data: myShop.toJson(),
+        );
+      });
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  // Update Store
+  updateShopInfo(ShopModel currentShop, String id) async {
+    try {
+      await databases.updateDocument(
+        databaseId: Credentials.DatabaseId,
+        collectionId: Credentials.ShopsCollectionId,
+        documentId: id,
+        data: currentShop.toJson(),
+      );
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  // Delete Account's Store
+  deleteShop(ShopModel todo, String id) async {
+    try {
+      await databases.deleteDocument(
+        databaseId: Credentials.DatabaseId,
+        collectionId: Credentials.ShopsCollectionId,
+        documentId: id,
+      );
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+
 
 }

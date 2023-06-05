@@ -1,4 +1,7 @@
+import 'package:date_time_picker/date_time_picker.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:local_ease/seller_screens/choose_shop_from_map.dart';
 import 'package:local_ease/seller_screens/manage_store_items.dart';
 import 'package:local_ease/theme/app-theme.dart';
 import 'package:local_ease/theme/colors.dart';
@@ -29,6 +32,12 @@ class _StoreListingPageState extends State<StoreListingPage> {
     "ijfej9efj",
     "iojfiw",
     "kowj"
+  ];
+
+  List outStock = [
+    "Apricot",
+    "Watermelon",
+    "Pineapple",
   ];
 
   @override
@@ -93,10 +102,40 @@ class _StoreListingPageState extends State<StoreListingPage> {
                       const SizedBox(
                         height: 20,
                       ),
-                      TextFieldInput(
-                        title: 'Location',
-                        hintText: '47 W 13th St, NYC',
-                        onChanged: (val) {},
+                      Text(
+                        'Location',
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                              color: Theme.of(context).hintColor,
+                              letterSpacing: 0.1,
+                            ),
+                      ),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ChooseShopFromMap(),
+                              ));
+                        },
+                        child: Container(
+                          height: 50,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: AppColors.grey),
+                          ),
+                          child: Center(child: Row(
+                            children: [
+                              SizedBox(width: 6),
+                              Icon(Icons.location_on_outlined),
+                              SizedBox(width: 8),
+                              Text("Location Data"),
+                            ],
+                          )),
+                        ),
                       ),
                       const SizedBox(
                         height: 20,
@@ -109,23 +148,85 @@ class _StoreListingPageState extends State<StoreListingPage> {
                         maxLength: 100,
                       ),
                       const SizedBox(
+                        height: 20,
+                      ),
+                      TextFieldInput(
+                        title: 'Phone',
+                        hintText: '+91 6370299855',
+                        onChanged: (val) {},
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      TextFieldInput(
+                        title: 'Email',
+                        hintText: 'hillsidefruits@comp.in',
+                        onChanged: (val) {},
+                      ),
+                      const SizedBox(
                         height: 25,
                       ),
-
+                      DateTimePicker(
+                        type: DateTimePickerType.dateTimeSeparate,
+                        dateMask: 'd MMM, yyyy',
+                        initialValue: DateTime.now().toString(),
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2100),
+                        dateLabelText: 'Opens on',
+                        timeLabelText: 'Time',
+                        onChanged: (val) => print(val),
+                        onSaved: (val) => print(val),
+                      ),
+                      const SizedBox(
+                        height: 18,
+                      ),
+                      DateTimePicker(
+                        type: DateTimePickerType.dateTimeSeparate,
+                        dateMask: 'd MMM, yyyy',
+                        initialValue: DateTime.now().toString(),
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2100),
+                        dateLabelText: 'Closes on',
+                        timeLabelText: 'Time',
+                        onChanged: (val) {
+                          print(DateTime.parse('var'));
+                        },
+                        validator: (val) {
+                          print(val);
+                          return null;
+                        },
+                        onSaved: (val) => print(val),
+                      ),
+                      const SizedBox(
+                        height: 30,
+                      ),
                       Text(
                         "Store Items",
                         style: textTheme.titleMedium,
                       ),
-
                       Wrap(
                         spacing: 8.0, // gap between adjacent chips
                         runSpacing: 4.0, // gap between lines
                         children: <Widget>[
                           for (String item in storesItem)
                             Chip(
-                              avatar: CircleAvatar(
-                                  backgroundColor: Colors.blue.shade900,
-                                  child: const Text('IN')),
+                              backgroundColor: AppColors.white,
+                              side: const BorderSide(color: AppColors.grey),
+                              avatar: outStock.contains(item)
+                                  ? const CircleAvatar(
+                                      backgroundColor: AppColors.orange,
+                                      child: Text(
+                                        'OUT',
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 12),
+                                      ))
+                                  : const CircleAvatar(
+                                      backgroundColor: AppColors.green,
+                                      child: Text(
+                                        'IN',
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 16),
+                                      )),
                               label: Text(
                                 item,
                                 style: textTheme.displayLarge,
@@ -133,9 +234,9 @@ class _StoreListingPageState extends State<StoreListingPage> {
                             ),
                         ],
                       ),
-
-
-
+                      const SizedBox(
+                        height: 16,
+                      ),
                       ElevatedButton(
                         onPressed: () {
                           Navigator.push(
@@ -149,32 +250,12 @@ class _StoreListingPageState extends State<StoreListingPage> {
                       const SizedBox(
                         height: 20,
                       ),
-                      ElevatedButton(onPressed: () {}, child: Text("Update")),
-
-                      // SizedBox(
-                      //   width: 0.5 * screenWidth,
-                      //   child: ElevatedButton(
-                      //     onPressed: () {
-                      //       //we don't want to come back to the login screen
-                      //     },
-                      //     child: Padding(
-                      //       padding: const EdgeInsets.symmetric(
-                      //         vertical: 5,
-                      //       ),
-                      //       child: Text(
-                      //         'Login',
-                      //         style: Theme.of(context)
-                      //             .textTheme
-                      //             .titleSmall
-                      //             ?.copyWith(
-                      //                 color: AppColors.white, fontSize: 24),
-                      //       ),
-                      //     ),
-                      //   ),
-                      // ),
-
+                      ElevatedButton(
+                        onPressed: () {},
+                        child: Text("Update Details"),
+                      ),
                       const SizedBox(
-                        height: 30,
+                        height: 40,
                       ),
                     ]
                   : [

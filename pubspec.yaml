@@ -18,7 +18,8 @@ dependencies:
   appwrite: ^9.0.0
   shared_preferences: ^2.1.0
   uuid: ^3.0.7
-  date_picker_timeline: ^1.2.3
+  date_time_picker: ^2.1.0
+  open_street_map_search_and_pick: ^0.0.17
 
 dev_dependencies:
   flutter_test:

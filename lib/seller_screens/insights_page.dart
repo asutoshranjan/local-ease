@@ -33,7 +33,7 @@ class _InsightsPageState extends State<InsightsPage> {
               style: textTheme.titleMedium,
             ),
             SizedBox(height: 22,),
-            ElevatedButton(onPressed: (){}, child: Text("View Subscribers")),
+            ElevatedButton(onPressed: (){}, child: Text("View All Subscribers")),
           ],
         ),
       ),

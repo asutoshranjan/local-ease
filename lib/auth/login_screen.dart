@@ -27,7 +27,7 @@ class _LoginPageState extends State<LoginPage> {
         centerTitle: true,
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 15),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -41,7 +41,7 @@ class _LoginPageState extends State<LoginPage> {
               },
             ),
             const SizedBox(
-              height: 25,
+              height: 18,
             ),
             TextFieldInput(
               title: 'Password',
