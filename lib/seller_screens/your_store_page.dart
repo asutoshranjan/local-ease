@@ -1,11 +1,16 @@
+import 'dart:developer';
+
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:local_ease/seller_screens/choose_shop_from_map.dart';
+import 'package:local_ease/apis/APIs.dart';
+import 'package:local_ease/models/shop_model.dart';
 import 'package:local_ease/seller_screens/manage_store_items.dart';
 import 'package:local_ease/theme/app-theme.dart';
 import 'package:local_ease/theme/colors.dart';
+import 'package:local_ease/widgets/itemstag.dart';
 import 'package:local_ease/widgets/textfields.dart';
+import 'package:open_street_map_search_and_pick/open_street_map_search_and_pick.dart';
 
 class StoreListingPage extends StatefulWidget {
   const StoreListingPage({Key? key}) : super(key: key);
@@ -17,21 +22,20 @@ class StoreListingPage extends StatefulWidget {
 class _StoreListingPageState extends State<StoreListingPage> {
   bool isOpen = true;
   TextEditingController storeNameController = TextEditingController();
-  TextEditingController storeLocationController = TextEditingController();
+  String currentAddress = "Pick Your Location";
+  String lat = "";
+  String long = "";
+  TextEditingController emailController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController aboutController = TextEditingController();
+  TextEditingController addItemController = TextEditingController();
+  String opens = "";
+  String closes = "";
 
   List storesItem = [
-    "Apples",
     "Apricot",
-    "Plum",
     "Watermelon",
-    "Orange",
     "Pineapple",
-    "Blueberry",
-    "Papaya",
-    "Hihfhhq ehf",
-    "ijfej9efj",
-    "iojfiw",
-    "kowj"
   ];
 
   List outStock = [
@@ -42,6 +46,7 @@ class _StoreListingPageState extends State<StoreListingPage> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
         appBar: AppBar(
           title: Text("Manage Your Store"),
@@ -89,12 +94,12 @@ class _StoreListingPageState extends State<StoreListingPage> {
             physics: const BouncingScrollPhysics(),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: isOpen
-                  ? [
+              children: isOpen ?  [
                       const SizedBox(
                         height: 20,
                       ),
                       TextFieldInput(
+                        controller: storeNameController,
                         title: 'Store Name',
                         hintText: 'Hillside Fruits',
                         onChanged: (val) {},
@@ -114,11 +119,59 @@ class _StoreListingPageState extends State<StoreListingPage> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ChooseShopFromMap(),
-                              ));
+                          // Navigator.push(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //       builder: (context) => ChooseShopFromMap(),
+                          //     ));
+
+                          showDialog(
+                            barrierDismissible: false,
+                            context: context,
+                            builder: (BuildContext context) {
+                              return StatefulBuilder(
+                                builder: (context, setState) {
+                                  return WillPopScope(
+                                      onWillPop: () {
+                                        return Future.value(true);
+                                      },
+                                      child: Material(
+                                        child: Container(
+                                          padding: const EdgeInsets.all(0.0),
+                                          width: screenWidth,
+                                          height: screenWidth * 2,
+                                          child: OpenStreetMapSearchAndPick(
+                                              center: LatLong(
+                                                  19.357640790268235,
+                                                  84.97573036558032),
+                                              buttonTextColor: AppColors.white,
+                                              buttonColor: AppColors.pink,
+                                              zoomInIcon:
+                                                  CupertinoIcons.zoom_in,
+                                              zoomOutIcon:
+                                                  CupertinoIcons.zoom_out,
+                                              locationPinIconColor:
+                                                  AppColors.green,
+                                              buttonText: 'Set This Location',
+                                              onPicked: (pickedData) {
+                                                print(pickedData
+                                                    .latLong.latitude);
+                                                print(pickedData
+                                                    .latLong.longitude);
+                                                print(pickedData.address);
+
+                                                lat = pickedData.latLong.latitude.toString();
+                                                long = pickedData.latLong.longitude.toString();
+                                                currentAddress = pickedData.address;
+                                                setState(() {});
+                                                Navigator.pop(context);
+                                              }),
+                                        ),
+                                      ));
+                                },
+                              );
+                            },
+                          );
                         },
                         child: Container(
                           height: 50,
@@ -127,12 +180,19 @@ class _StoreListingPageState extends State<StoreListingPage> {
                             borderRadius: BorderRadius.circular(8),
                             border: Border.all(color: AppColors.grey),
                           ),
-                          child: Center(child: Row(
+                          child: Center(
+                              child: Row(
                             children: [
                               SizedBox(width: 6),
                               Icon(Icons.location_on_outlined),
                               SizedBox(width: 8),
-                              Text("Location Data"),
+                              SizedBox(
+                                width: 280,
+                                child: Text(
+                                  currentAddress,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
                             ],
                           )),
                         ),
@@ -141,6 +201,7 @@ class _StoreListingPageState extends State<StoreListingPage> {
                         height: 20,
                       ),
                       TextFieldInput(
+                        controller: aboutController,
                         title: 'About',
                         hintText: 'Get freshness of hillside fruits',
                         onChanged: (val) {},
@@ -151,6 +212,7 @@ class _StoreListingPageState extends State<StoreListingPage> {
                         height: 20,
                       ),
                       TextFieldInput(
+                        controller: phoneController,
                         title: 'Phone',
                         hintText: '+91 6370299855',
                         onChanged: (val) {},
@@ -159,6 +221,7 @@ class _StoreListingPageState extends State<StoreListingPage> {
                         height: 20,
                       ),
                       TextFieldInput(
+                        controller: emailController,
                         title: 'Email',
                         hintText: 'hillsidefruits@comp.in',
                         onChanged: (val) {},
@@ -204,63 +267,104 @@ class _StoreListingPageState extends State<StoreListingPage> {
                         "Store Items",
                         style: textTheme.titleMedium,
                       ),
-                      Wrap(
-                        spacing: 8.0, // gap between adjacent chips
-                        runSpacing: 4.0, // gap between lines
-                        children: <Widget>[
-                          for (String item in storesItem)
-                            Chip(
-                              backgroundColor: AppColors.white,
-                              side: const BorderSide(color: AppColors.grey),
-                              avatar: outStock.contains(item)
-                                  ? const CircleAvatar(
-                                      backgroundColor: AppColors.orange,
-                                      child: Text(
-                                        'OUT',
-                                        style: TextStyle(
-                                            color: Colors.white, fontSize: 12),
-                                      ))
-                                  : const CircleAvatar(
-                                      backgroundColor: AppColors.green,
-                                      child: Text(
-                                        'IN',
-                                        style: TextStyle(
-                                            color: Colors.white, fontSize: 16),
-                                      )),
-                              label: Text(
-                                item,
-                                style: textTheme.displayLarge,
-                              ),
-                            ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      TextFieldInput(
+                        controller: addItemController,
+                        title: 'Item Name',
+                        hintText: 'Apricot',
+                        onChanged: (val) {},
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      Row(
+                        children: [
+                          Spacer(),
+                          ElevatedButton(
+                              child: Text('Add'),
+                              onPressed: () {
+                                log("Adding item ${addItemController.text} and ${storesItem.length}");
+                                storesItem.add(addItemController.text);
+                                setState(() {});
+                              }),
                         ],
                       ),
                       const SizedBox(
-                        height: 16,
+                        height: 10,
                       ),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const ManageStoreItems(),
-                              ));
-                        },
-                        child: Text("Manage Items"),
+                      Container(
+                        height: 400,
+                        child: ListView(
+                          physics: BouncingScrollPhysics(),
+                          children: [
+                            for (var str in storesItem)
+                              Container(
+                                width: double.infinity,
+                                height: 50,
+                                margin: EdgeInsets.only(bottom: 16),
+                                decoration: BoxDecoration(
+                                  color: AppColors.white,
+                                  border: Border.all(color: AppColors.grey),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 10),
+                                      child: Text(str),
+                                    ),
+                                    Row(
+                                      children: [
+                                        IconButton(
+                                          onPressed: () {},
+                                          icon:
+                                              Icon(CupertinoIcons.xmark_circle),
+                                        ),
+                                        IconButton(
+                                          onPressed: () {},
+                                          icon: Icon(CupertinoIcons.delete),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              )
+                          ],
+                        ),
                       ),
                       const SizedBox(
                         height: 20,
                       ),
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () async{
+                          ShopModel newShop = ShopModel(
+                            name: storeNameController.text,
+                            lat: lat,
+                            long: long,
+                            address: currentAddress,
+                            email: emailController.text,
+                            phone: phoneController.text,
+                            items: storesItem,
+                            outStock: outStock,
+                            about: aboutController.text,
+                            opens: opens,
+                            closes: closes,
+                          );
+                          await APIs.instance.createShop(currentShop: newShop);
+
+                        },
                         child: Text("Update Details"),
                       ),
                       const SizedBox(
                         height: 40,
                       ),
-                    ]
-                  : [
-                      Text("Closed Page"),
-                    ],
+                    ] : [
+                      Text("Closed")
+              ]
             ),
           ),
         ));

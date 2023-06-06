@@ -1,6 +1,7 @@
 import 'package:appwrite/appwrite.dart';
 import 'package:appwrite/models.dart' as models;
 import 'package:local_ease/models/shop_model.dart';
+import 'package:local_ease/models/user_model.dart';
 import 'package:local_ease/utils/credentials.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
@@ -88,19 +89,26 @@ class APIs {
 
   /// Database CRUD Operation Functions
 
+
+
+  // if docid == null create else update
+
   // Create Store
   Future<void> createShop(
       {required ShopModel currentShop,}) async {
     try {
       await getUserID().then((userId) async {
         String docId = uuid.v1();
-        ShopModel myShop = ShopModel(
-          name: 'New Shop',
-        );
+        ShopModel myShop = currentShop;
+        myShop.ownerId = userId;
+        myShop.subscribers =[];
+        myShop.photo = "";
+        myShop.outStock = [];
+        myShop.isOpen = true;
         await databases.createDocument(
           databaseId: Credentials.DatabaseId,
           collectionId: Credentials.ShopsCollectionId,
-          documentId: docId,
+          documentId: userId!,
           data: myShop.toJson(),
         );
       });
@@ -110,12 +118,12 @@ class APIs {
   }
 
   // Update Store
-  updateShopInfo(ShopModel currentShop, String id) async {
+  updateShopInfo(ShopModel currentShop) async {
     try {
       await databases.updateDocument(
         databaseId: Credentials.DatabaseId,
         collectionId: Credentials.ShopsCollectionId,
-        documentId: id,
+        documentId: currentShop.ownerId!,
         data: currentShop.toJson(),
       );
     } catch (e) {
@@ -124,12 +132,54 @@ class APIs {
   }
 
   // Delete Account's Store
-  deleteShop(ShopModel todo, String id) async {
+  deleteShop(ShopModel currentShop) async {
     try {
       await databases.deleteDocument(
         databaseId: Credentials.DatabaseId,
         collectionId: Credentials.ShopsCollectionId,
-        documentId: id,
+        documentId: currentShop.ownerId!,
+      );
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+
+
+
+
+  // Create New User
+  Future<void> createUser(
+      {required MyUserModel currentUser,}) async {
+    try {
+      await getUserID().then((userId) async {
+        String docId = uuid.v1();
+        MyUserModel myUser = currentUser;
+        myUser.docId = userId;
+        myUser.following = [];
+        myUser.notifications = [];
+        myUser.photo = "";
+        myUser.type = "";
+        await databases.createDocument(
+          databaseId: Credentials.DatabaseId,
+          collectionId: Credentials.ShopsCollectionId,
+          documentId: userId!,
+          data: myUser.toJson(),
+        );
+      });
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  // Update User
+  updateUserInfo(ShopModel currentShop) async {
+    try {
+      await databases.updateDocument(
+        databaseId: Credentials.DatabaseId,
+        collectionId: Credentials.ShopsCollectionId,
+        documentId: currentShop.ownerId!,
+        data: currentShop.toJson(),
       );
     } catch (e) {
       rethrow;

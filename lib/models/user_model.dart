@@ -1,26 +1,32 @@
 class MyUserModel{
-  String? title;
-  String? description;
-  bool? isDone;
-  String? userId;
+  String? name;
+  List? following;
+  List? notifications;
+  String? email;
+  String? photo;
+  String? type;
   String? docId;
 
-  MyUserModel({this.title, this.description, this.isDone, this.userId, this.docId});
+  MyUserModel({this.name, this.following, this.notifications, this.email, this.photo, this.docId, this.type});
   MyUserModel.fromJson(Map<String,dynamic> json){
-    title = json['title'];
-    description = json['description'];
-    isDone = json['isDone'];
-    userId = json['userId'];
-    docId = json['docId'];
+    name = json['name'];
+    following = json['following'];
+    notifications = json['notifications'];
+    email = json['email'];
+    photo = json['photo'];
+    type = json['type'];
+    docId = json['docid'];
   }
 
   Map<String, dynamic> toJson(){
     final data = <String, dynamic>{};
-    data['title'] = title;
-    data['description'] = description;
-    data['isDone'] = isDone;
-    data['userId'] = userId;
-    data['docId'] = docId;
+    data['name'] = name;
+    data['following'] = following;
+    data['notifications'] = notifications;
+    data['email'] = email;
+    data['photo'] = photo;
+    data['type'] = type;
+    data['docid'] = docId;
     return data;
   }
 }
