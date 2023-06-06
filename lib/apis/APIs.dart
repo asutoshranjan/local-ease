@@ -91,6 +91,23 @@ class APIs {
 
 
 
+  // check if store exist and get value
+
+  Future<ShopModel?> getStore() async{
+    ShopModel? myShopModel;
+    await getUserID().then((userId) async {
+      await databases.getDocument(
+        databaseId: Credentials.DatabaseId,
+        collectionId: Credentials.ShopsCollectionId,
+        documentId: userId!,
+      ).then((value) {
+        if(value.data != null) {
+          myShopModel = ShopModel.fromJson(value.data);
+        }
+      });
+    });
+    return myShopModel;
+  }
   // if docid == null create else update
 
   // Create Store
@@ -102,8 +119,6 @@ class APIs {
         ShopModel myShop = currentShop;
         myShop.ownerId = userId;
         myShop.subscribers =[];
-        myShop.photo = "";
-        myShop.outStock = [];
         myShop.isOpen = true;
         await databases.createDocument(
           databaseId: Credentials.DatabaseId,
@@ -145,6 +160,29 @@ class APIs {
   }
 
 
+  // Subscribe
+
+  subscribe(String shopId, List subscribers) async{
+    try {
+      // add to shop subscription list
+      await getUserID().then((userId) async {
+        subscribers.add(userId);
+        await databases.updateDocument(
+          databaseId: Credentials.DatabaseId,
+          collectionId: Credentials.ShopsCollectionId,
+          documentId: shopId,
+          data: {
+            "subscribers": subscribers,
+          },
+        );
+      }
+      // add to user subscribed list list
+      );} catch (e) {
+      rethrow;
+    }
+  }
+
+
 
 
 
@@ -158,7 +196,6 @@ class APIs {
         myUser.docId = userId;
         myUser.following = [];
         myUser.notifications = [];
-        myUser.photo = "";
         myUser.type = "";
         await databases.createDocument(
           databaseId: Credentials.DatabaseId,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:local_ease/apis/APIs.dart';
 import 'package:local_ease/customer_screens/full_shop_page.dart';
 import 'package:local_ease/theme/app-theme.dart';
 import 'package:local_ease/theme/colors.dart';
@@ -12,6 +13,7 @@ class MyCards extends StatefulWidget {
 }
 
 class _MyCardsState extends State<MyCards> {
+
   @override
   Widget build(BuildContext context) {
     List subscribers = widget.current_obj['subscribers'] ?? [];
@@ -61,8 +63,8 @@ class _MyCardsState extends State<MyCards> {
                       Text(
                         "Items",
                         style: textTheme.bodyMedium!.copyWith(
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.orange),
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.grey),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -114,16 +116,27 @@ class _MyCardsState extends State<MyCards> {
                       height: 10,
                     ),
 
-                    subscribers.contains('id1')
-                        ? ElevatedButton(
-                      style: ElevatedButton.styleFrom(backgroundColor: AppColors.grey, ),
-                      onPressed: () {},
-                      child: Text("Subscribed"),
-                    )
-                        : ElevatedButton(
-                      onPressed: () {},
-                      child: Text("Subscribe"),
-                    ),
+                    FutureBuilder(
+                      future: APIs.instance.getUserID(),
+                        builder: (context, snapshot){
+                        if(snapshot.hasData && snapshot.data != null) {
+                          return subscribers.contains(snapshot.data)
+                              ? ElevatedButton(
+                            style: ElevatedButton.styleFrom(backgroundColor: AppColors.tabGrey, foregroundColor:  AppColors.grey),
+                            onPressed: () {},
+                            child: Text("Subscribed"),
+                          )
+                              : ElevatedButton(
+                            onPressed: () async{
+                              List subs = widget.current_obj['subscribers'];
+                              String shopId = widget.current_obj['ownerid'];
+                              await APIs.instance.subscribe(shopId, subs);
+                            },
+                            child: Text("Subscribe"),
+                          );
+                        }
+                      return SizedBox();
+                    }),
                   ],
                 ),
               ],

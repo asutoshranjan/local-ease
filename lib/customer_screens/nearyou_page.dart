@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:local_ease/apis/APIs.dart';
 import 'package:local_ease/customer_screens/notification_page.dart';
 import 'package:local_ease/customer_screens/select_from_map.dart';
 import 'package:local_ease/main.dart';
@@ -23,6 +24,7 @@ class _NearYouPageState extends State<NearYouPage> {
   String databaseId = Credentials.DatabaseId;
   String collectionId = Credentials.ShopsCollectionId;
   late RealtimeSubscription subscription;
+  String? myId;
 
   List<Map<String, dynamic>> items = [];
 
@@ -32,6 +34,9 @@ class _NearYouPageState extends State<NearYouPage> {
     loadItems();
     subscribe();
   }
+
+
+
 
   loadItems() async {
     try {
