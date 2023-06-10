@@ -7,6 +7,7 @@ import 'package:local_ease/theme/app-theme.dart';
 import 'package:local_ease/theme/colors.dart';
 
 import '../auth/login_screen.dart';
+import '../utils/sizeConfig.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -69,38 +70,49 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return Scaffold(
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const SizedBox(
-              height: 50,
-            ),
-            Center(
-              child: RichText(
-                text: TextSpan(
-                  text: 'Local',
-                  style: textTheme.titleLarge!.copyWith(
-                      fontSize: 32,
-                      color: AppColors.black,
-                      fontWeight: FontWeight.w600),
-                  /*defining default style is optional */
-                  children: const <TextSpan>[
-                    TextSpan(
-                      text: 'Ease',
-                      style: TextStyle(color: AppColors.pink),
-                    ),
-                  ],
+
+            SizedBox(),
+
+            Column(
+              children: [
+                const SizedBox(
+                  height: 50,
                 ),
-              ),
+                Center(
+                  child: RichText(
+                    text: TextSpan(
+                      text: 'Local',
+                      style: textTheme.titleLarge!.copyWith(
+                          fontSize: 32,
+                          color: AppColors.black,
+                          fontWeight: FontWeight.w600),
+                      /*defining default style is optional */
+                      children: const <TextSpan>[
+                        TextSpan(
+                          text: 'Ease',
+                          style: TextStyle(color: AppColors.pink),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                const CircularProgressIndicator(
+                  color: AppColors.pink,
+                ),
+              ],
             ),
-            const SizedBox(
-              height: 20,
-            ),
-            const CircularProgressIndicator(
-              color: AppColors.pink,
-            ),
+
+            const Text("#Built with Appwrite"),
+
           ],
         ),
       ),

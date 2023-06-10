@@ -13,7 +13,7 @@ class APIs {
   static final APIs _instance = APIs._privateConstructor();
   static APIs get instance => _instance;
   static final Future<SharedPreferences> _prefs =
-  SharedPreferences.getInstance();
+      SharedPreferences.getInstance();
 
   static final account = Account(client);
 
@@ -40,7 +40,7 @@ class APIs {
     final SharedPreferences prefs = await _prefs;
     try {
       final models.Session response =
-      await account.createEmailSession(email: email, password: password);
+          await account.createEmailSession(email: email, password: password);
       prefs.setString('userId', response.userId);
       prefs.setString('email', email);
       prefs.setString('password', password);
@@ -55,7 +55,7 @@ class APIs {
       String email, String password, String name) async {
     final SharedPreferences prefs = await _prefs;
     try {
-       await account.create(
+      await account.create(
         userId: ID.unique(),
         email: email,
         password: password,
@@ -65,7 +65,6 @@ class APIs {
         email: email,
         password: password,
       );
-
 
       prefs.setString('userId', response.userId);
       prefs.setString('email', email);
@@ -85,25 +84,21 @@ class APIs {
     prefs.remove('password');
   }
 
-
-
-
-
   /// Database CRUD Operation Functions
-
-
 
   // check if store exist and get value
 
-  Future<ShopModel?> getStore() async{
+  Future<ShopModel?> getStore() async {
     ShopModel? myShopModel;
     await getUserID().then((userId) async {
-      await databases.getDocument(
+      await databases
+          .getDocument(
         databaseId: Credentials.DatabaseId,
         collectionId: Credentials.ShopsCollectionId,
         documentId: userId!,
-      ).then((value) {
-        if(value.data != null) {
+      )
+          .then((value) {
+        if (value.data != null) {
           myShopModel = ShopModel.fromJson(value.data);
         }
       });
@@ -113,14 +108,15 @@ class APIs {
   // if docid == null create else update
 
   // Create Store
-  Future<void> createShop(
-      {required ShopModel currentShop,}) async {
+  Future<void> createShop({
+    required ShopModel currentShop,
+  }) async {
     try {
       await getUserID().then((userId) async {
         String docId = uuid.v1();
         ShopModel myShop = currentShop;
         myShop.ownerId = userId;
-        myShop.subscribers =[];
+        myShop.subscribers = [];
         myShop.isOpen = true;
         await databases.createDocument(
           databaseId: Credentials.DatabaseId,
@@ -161,10 +157,9 @@ class APIs {
     }
   }
 
-
   // Subscribe
 
-  subscribe(String shopId, List subscribers) async{
+  subscribe(String shopId, List subscribers) async {
     try {
       // add to shop subscription list
       await getUserID().then((userId) async {
@@ -190,27 +185,51 @@ class APIs {
             },
           );
         });
-
       }
-      // add to user subscribed list list
-      );} catch (e) {
+          // add to user subscribed list list
+          );
+    } catch (e) {
       rethrow;
     }
   }
 
+  Future<List<ShopModel>> getSubscribedStore() async {
+    List<ShopModel> myStores = [];
+
+    MyUserModel? currentUser = await getUser();
+
+    if (currentUser != null) {
+      List shops = currentUser.following!;
+
+      for (var shopId in shops) {
+        final value = await databases.getDocument(
+          databaseId: Credentials.DatabaseId,
+          collectionId: Credentials.ShopsCollectionId,
+          documentId: shopId,
+        );
+        ShopModel myShopModel = ShopModel.fromJson(value.data);
+        myStores.add(myShopModel);
+      }
+      return myStores;
+    }
+
+    return myStores;
+  }
 
   // get user
 
-  Future<MyUserModel?> getUser() async{
+  Future<MyUserModel?> getUser() async {
     MyUserModel? currentUser;
-    await getUserID().then((userId) async{
+    await getUserID().then((userId) async {
       try {
-        await databases.getDocument(
+        await databases
+            .getDocument(
           databaseId: Credentials.DatabaseId,
           collectionId: Credentials.UsersCollectonId,
           documentId: userId!,
-        ).then((value) {
-          if(value.data != null) {
+        )
+            .then((value) {
+          if (value.data != null) {
             currentUser = MyUserModel.fromJson(value.data);
           }
         });
@@ -221,28 +240,27 @@ class APIs {
     return currentUser;
   }
 
-
-
   // Create New User
-  Future<void> createUser(
-      {required String type,}) async {
-      await account.get().then((user) {
-        MyUserModel newUser = MyUserModel(
-          name: user.name,
-          email: user.email,
-          following: [],
-          notifications: [],
-          photo: "https://cdn-icons-png.flaticon.com/512/266/266033.png",
-          type: type,
-          docId: user.$id,
-        );
-        databases.createDocument(
-          databaseId: Credentials.DatabaseId,
-          collectionId: Credentials.UsersCollectonId,
-          documentId: user.$id,
-          data: newUser.toJson(),
-        );
-      });
+  Future<void> createUser({
+    required String type,
+  }) async {
+    await account.get().then((user) {
+      MyUserModel newUser = MyUserModel(
+        name: user.name,
+        email: user.email,
+        following: [],
+        notifications: [],
+        photo: "https://cdn-icons-png.flaticon.com/512/266/266033.png",
+        type: type,
+        docId: user.$id,
+      );
+      databases.createDocument(
+        databaseId: Credentials.DatabaseId,
+        collectionId: Credentials.UsersCollectonId,
+        documentId: user.$id,
+        data: newUser.toJson(),
+      );
+    });
   }
 
   // Update User
@@ -258,7 +276,4 @@ class APIs {
       rethrow;
     }
   }
-
-
-
 }
