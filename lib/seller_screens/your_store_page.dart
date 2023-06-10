@@ -228,7 +228,7 @@ class _StoreListingPageState extends State<StoreListingPage> {
                         ),
                         TextFieldInput(
                           controller: photoUrlController,
-                          title: 'Photo',
+                          title: 'Photo Link',
                           hintText: 'Paste photo url',
                           onChanged: (val) {},
                         ),
@@ -302,8 +302,6 @@ class _StoreListingPageState extends State<StoreListingPage> {
                         ),
                         DateTimePicker(
                           type: DateTimePickerType.dateTimeSeparate,
-                          dateMask: 'd MMM, yyyy',
-                          initialValue: closes,
                           firstDate: DateTime(2000),
                           lastDate: DateTime(2100),
                           dateLabelText: 'Closes on',

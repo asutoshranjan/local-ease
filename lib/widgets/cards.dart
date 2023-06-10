@@ -32,9 +32,14 @@ class _MyCardsState extends State<MyCards> {
         child: Container(
           decoration: BoxDecoration(
             color: AppColors.white,
-            border: Border.all(
-              color: AppColors.grey,
-            ),
+
+            boxShadow: [
+              BoxShadow(
+              offset: Offset(2, 2),
+          blurRadius: 12,
+          color: Color.fromRGBO(0, 0, 0, 0.16),
+        )
+        ],
             borderRadius: BorderRadius.circular(15),
           ),
           child: Padding(
@@ -80,7 +85,9 @@ class _MyCardsState extends State<MyCards> {
                               Container(
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(7),
-                                    border: Border.all(color: AppColors.grey)),
+                                    border: Border.all(color: AppColors.grey),
+                                    color: AppColors.tabGrey,
+                                ),
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 4, vertical: 2),
@@ -121,12 +128,12 @@ class _MyCardsState extends State<MyCards> {
                         builder: (context, snapshot){
                         if(snapshot.hasData && snapshot.data != null) {
                           return subscribers.contains(snapshot.data)
-                              ? ElevatedButton(
+                              ? TextButton(
                             style: ElevatedButton.styleFrom(backgroundColor: AppColors.tabGrey, foregroundColor:  AppColors.grey),
                             onPressed: () {},
                             child: Text("Subscribed"),
                           )
-                              : ElevatedButton(
+                              : TextButton(
                             onPressed: () async{
                               List subs = widget.current_obj['subscribers'];
                               String shopId = widget.current_obj['ownerid'];

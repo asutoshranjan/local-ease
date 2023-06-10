@@ -60,6 +60,13 @@ abstract class AppTheme {
         textStyle: textTheme.titleSmall,
       ),
     ),
+    textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(
+        backgroundColor: AppColors.tabPink,
+        foregroundColor: AppColors.white,
+        textStyle: textTheme.titleSmall,
+      ),
+    ),
     progressIndicatorTheme: const ProgressIndicatorThemeData(color: AppColors.pink),
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
         backgroundColor: AppColors.white,

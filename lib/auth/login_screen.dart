@@ -4,6 +4,8 @@ import 'package:local_ease/helpers/dialogs.dart';
 import 'package:local_ease/launch_screens/choose_account_type.dart';
 
 import '../../apis/APIs.dart';
+import '../customer_screens/home_page.dart';
+import '../seller_screens/home_page.dart';
 import '../widgets/textfields.dart';
 
 class LoginPage extends StatefulWidget {
@@ -75,13 +77,34 @@ class _LoginPageState extends State<LoginPage> {
                     password!,
                   ).then((result) {
                     if(result) {
+
                       Dialogs.showSnackbar(context, 'Logged in!');
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const ChooseAccountType(),
-                        ),
-                      );
+
+                      APIs.instance.getUser().then((currentUser) {
+                        if (currentUser == null) {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const ChooseAccountType(),
+                            ),
+                          );
+                        } else if (currentUser.type == "Consumer") {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const HomePage(),
+                            ),
+                          );
+                        } else if (currentUser.type == "Seller") {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const SellerHomePage(),
+                            ),
+                          );
+                        }
+                      });
+
                     }
                   });
                 } catch (e) {

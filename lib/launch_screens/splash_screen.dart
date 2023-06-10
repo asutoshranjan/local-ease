@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:local_ease/apis/APIs.dart';
+import 'package:local_ease/customer_screens/home_page.dart';
 import 'package:local_ease/launch_screens/choose_account_type.dart';
+import 'package:local_ease/seller_screens/home_page.dart';
 import 'package:local_ease/theme/app-theme.dart';
 import 'package:local_ease/theme/colors.dart';
 
@@ -27,12 +29,32 @@ class _SplashScreenState extends State<SplashScreen> {
   void getUserStatus() async {
     await APIs.instance.isLoggedIn().then((isLoggedIn) {
       if (isLoggedIn) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (_) => const ChooseAccountType(),
-          ),
-        );
+
+        APIs.instance.getUser().then((currentUser) {
+          if (currentUser == null) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (_) => const ChooseAccountType(),
+              ),
+            );
+          } else if (currentUser.type == "Consumer") {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (_) => const HomePage(),
+              ),
+            );
+          } else if (currentUser.type == "Seller") {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (_) => const SellerHomePage(),
+              ),
+            );
+          }
+        });
+
       } else {
         Navigator.pushReplacement(
           context,

@@ -65,6 +65,8 @@ class APIs {
         email: email,
         password: password,
       );
+
+
       prefs.setString('userId', response.userId);
       prefs.setString('email', email);
       prefs.setString('password', password);
@@ -175,6 +177,20 @@ class APIs {
             "subscribers": subscribers,
           },
         );
+
+        await getUser().then((value) {
+          List subs = value!.following!;
+          subs.add(shopId);
+          databases.updateDocument(
+            databaseId: Credentials.DatabaseId,
+            collectionId: Credentials.UsersCollectonId,
+            documentId: value.docId!,
+            data: {
+              "following": subs,
+            },
+          );
+        });
+
       }
       // add to user subscribed list list
       );} catch (e) {
@@ -183,40 +199,60 @@ class APIs {
   }
 
 
+  // get user
+
+  Future<MyUserModel?> getUser() async{
+    MyUserModel? currentUser;
+    await getUserID().then((userId) async{
+      try {
+        await databases.getDocument(
+          databaseId: Credentials.DatabaseId,
+          collectionId: Credentials.UsersCollectonId,
+          documentId: userId!,
+        ).then((value) {
+          if(value.data != null) {
+            currentUser = MyUserModel.fromJson(value.data);
+          }
+        });
+      } catch (e) {
+        return currentUser;
+      }
+    });
+    return currentUser;
+  }
 
 
 
   // Create New User
   Future<void> createUser(
-      {required MyUserModel currentUser,}) async {
-    try {
-      await getUserID().then((userId) async {
-        String docId = uuid.v1();
-        MyUserModel myUser = currentUser;
-        myUser.docId = userId;
-        myUser.following = [];
-        myUser.notifications = [];
-        myUser.type = "";
-        await databases.createDocument(
+      {required String type,}) async {
+      await account.get().then((user) {
+        MyUserModel newUser = MyUserModel(
+          name: user.name,
+          email: user.email,
+          following: [],
+          notifications: [],
+          photo: "https://cdn-icons-png.flaticon.com/512/266/266033.png",
+          type: type,
+          docId: user.$id,
+        );
+        databases.createDocument(
           databaseId: Credentials.DatabaseId,
-          collectionId: Credentials.ShopsCollectionId,
-          documentId: userId!,
-          data: myUser.toJson(),
+          collectionId: Credentials.UsersCollectonId,
+          documentId: user.$id,
+          data: newUser.toJson(),
         );
       });
-    } catch (e) {
-      rethrow;
-    }
   }
 
   // Update User
-  updateUserInfo(ShopModel currentShop) async {
+  Future<void> updateUserInfo(MyUserModel currentUser) async {
     try {
       await databases.updateDocument(
         databaseId: Credentials.DatabaseId,
         collectionId: Credentials.ShopsCollectionId,
-        documentId: currentShop.ownerId!,
-        data: currentShop.toJson(),
+        documentId: currentUser.docId!,
+        data: currentUser.toJson(),
       );
     } catch (e) {
       rethrow;

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:local_ease/apis/APIs.dart';
 import 'package:local_ease/customer_screens/home_page.dart';
+import 'package:local_ease/models/user_model.dart';
 import 'package:local_ease/seller_screens/home_page.dart';
 
 class ChooseAccountType extends StatefulWidget {
@@ -23,22 +25,27 @@ class _ChooseAccountTypeState extends State<ChooseAccountType> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             ElevatedButton(
-                onPressed: () {
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const HomePage(),
-                      ));
+                onPressed: () async{
+
+                   await APIs.instance.createUser(type: "Consumer").then((value) {
+                     Navigator.pushReplacement(
+                         context,
+                         MaterialPageRoute(
+                           builder: (context) => const HomePage(),
+                         ));
+                   });
                 },
                 child: Text("I want to search shops and items")),
             SizedBox(height: 15,),
             ElevatedButton(
-                onPressed: () {
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const SellerHomePage(),
-                      ));
+                onPressed: () async{
+                    await APIs.instance.createUser(type: "Seller" ).then((value) {
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const SellerHomePage(),
+                          ));
+                    });
                 },
                 child: Text("I want to list my shop")),
           ],
