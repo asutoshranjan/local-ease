@@ -27,7 +27,8 @@ class Dialogs {
               child: Text(
                 msg,
                 style: Theme.of(context).textTheme.subtitle1,
-              )),
+              ),
+          ),
         ],
       ),
     );

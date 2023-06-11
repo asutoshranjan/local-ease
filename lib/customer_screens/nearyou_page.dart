@@ -24,7 +24,6 @@ class _NearYouPageState extends State<NearYouPage> {
   String databaseId = Credentials.DatabaseId;
   String collectionId = Credentials.ShopsCollectionId;
   late RealtimeSubscription subscription;
-  String? myId;
 
   List<Map<String, dynamic>> items = [];
 

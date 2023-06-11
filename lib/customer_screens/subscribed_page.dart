@@ -34,12 +34,17 @@ class _SubscribedPageState extends State<SubscribedPage> {
             } else if (snapshot.hasData ) {
               // Extracting data from snapshot object
               final data = snapshot.data as List<ShopModel>;
-              return ListView.builder(
-                itemCount: data.length,
-                itemBuilder: (context, index) {
-                  return MyCards(current_obj:  data[index].toJson());
-                }
-              );
+              if(data.isNotEmpty) {
+                return ListView.builder(
+                    itemCount: data.length,
+                    itemBuilder: (context, index) {
+                      return MyCards(current_obj:  data[index].toJson());
+                    }
+                );
+              } else {
+                return Text("You haven't subscribed to store yet");
+              }
+
             }
           }
           return Center(child: CircularProgressIndicator());

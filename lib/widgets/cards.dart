@@ -92,7 +92,7 @@ class _MyCardsState extends State<MyCards> {
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 4, vertical: 2),
                                   child: Text(
-                                    item,
+                                    item.trim(),
                                     style: textTheme.displaySmall,
                                   ),
                                 ),

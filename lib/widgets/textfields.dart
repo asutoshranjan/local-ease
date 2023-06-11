@@ -80,7 +80,7 @@ class TextFieldInput extends StatelessWidget {
             (maxLength == null) ? null : MaxLengthEnforcement.enforced,
             maxLines: obscureText ? 1 : maxLines,
             style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w500,
               // color: enabled ? null : Theme.of(context).,
             ),
             decoration: InputDecoration(
@@ -95,6 +95,7 @@ class TextFieldInput extends StatelessWidget {
                 borderRadius: BorderRadius.all(Radius.circular(8)),
                 borderSide: BorderSide(color: AppColors.tabPink),
               ),
+              suffixIconColor: AppColors.pink,
               contentPadding: contentPadding ?? const EdgeInsets.all(12),
               enabled: enabled,
               filled: true,

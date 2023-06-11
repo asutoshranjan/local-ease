@@ -74,7 +74,7 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
 
             SizedBox(),
@@ -111,7 +111,10 @@ class _SplashScreenState extends State<SplashScreen> {
               ],
             ),
 
-            const Text("#Built with Appwrite"),
+            Padding(
+              padding:  EdgeInsets.only(bottom: 15),
+              child: Text("#Built with Appwrite"),
+            ),
 
           ],
         ),

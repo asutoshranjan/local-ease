@@ -1,5 +1,6 @@
 import 'package:appwrite/appwrite.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:local_ease/launch_screens/splash_screen.dart';
 import 'package:local_ease/theme/app-theme.dart';
 import 'package:local_ease/utils/credentials.dart';
@@ -10,6 +11,9 @@ Client client = Client();
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   client.setEndpoint(Credentials.APIEndpoint).setProject(Credentials.ProjectID).setSelfSigned(status: true);
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
+  );
   runApp(const MyApp());
 }
 

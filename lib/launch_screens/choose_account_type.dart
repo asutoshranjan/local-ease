@@ -26,7 +26,6 @@ class _ChooseAccountTypeState extends State<ChooseAccountType> {
           children: [
             ElevatedButton(
                 onPressed: () async{
-
                    await APIs.instance.createUser(type: "Consumer").then((value) {
                      Navigator.pushReplacement(
                          context,

@@ -78,8 +78,8 @@ class _StoreListingPageState extends State<StoreListingPage> {
           bottom: PreferredSize(
             preferredSize: Size.fromHeight(AppBar().preferredSize.height),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
+                SizedBox(width: 15),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor:
@@ -93,6 +93,7 @@ class _StoreListingPageState extends State<StoreListingPage> {
                   },
                   child: Text("Opened"),
                 ),
+                SizedBox(width: 25),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor:
@@ -105,9 +106,6 @@ class _StoreListingPageState extends State<StoreListingPage> {
                     });
                   },
                   child: Text("Closed"),
-                ),
-                SizedBox(
-                  width: 100,
                 ),
               ],
             ),
@@ -168,7 +166,7 @@ class _StoreListingPageState extends State<StoreListingPage> {
                                         buttonColor: AppColors.pink,
                                         zoomInIcon: CupertinoIcons.zoom_in,
                                         zoomOutIcon: CupertinoIcons.zoom_out,
-                                        locationPinIconColor: AppColors.green,
+                                        locationPinIconColor: AppColors.pink,
                                         buttonText: 'Set This Location',
                                         onPicked: (pickedData) {
                                           print(pickedData.latLong.latitude);

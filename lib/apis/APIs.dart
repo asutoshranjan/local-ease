@@ -90,20 +90,26 @@ class APIs {
 
   Future<ShopModel?> getStore() async {
     ShopModel? myShopModel;
-    await getUserID().then((userId) async {
-      await databases
-          .getDocument(
-        databaseId: Credentials.DatabaseId,
-        collectionId: Credentials.ShopsCollectionId,
-        documentId: userId!,
-      )
-          .then((value) {
-        if (value.data != null) {
-          myShopModel = ShopModel.fromJson(value.data);
-        }
+
+    try {
+      await getUserID().then((userId) async {
+        await databases
+            .getDocument(
+          databaseId: Credentials.DatabaseId,
+          collectionId: Credentials.ShopsCollectionId,
+          documentId: userId!,
+        )
+            .then((value) {
+          if (value.data != null) {
+            myShopModel = ShopModel.fromJson(value.data);
+          }
+        });
       });
-    });
-    return myShopModel;
+
+      return myShopModel;
+    } catch(e) {
+      return myShopModel; // Returns null
+    }
   }
   // if docid == null create else update
 
@@ -193,6 +199,9 @@ class APIs {
     }
   }
 
+
+  // For getting users subscribed stores
+
   Future<List<ShopModel>> getSubscribedStore() async {
     List<ShopModel> myStores = [];
 
@@ -214,6 +223,29 @@ class APIs {
     }
 
     return myStores;
+  }
+
+  // For getting subscribed users
+
+  Future<List<MyUserModel>> getSubscribedUsers() async{
+    List<MyUserModel> myUsers = [];
+
+    ShopModel? myShop = await getStore();
+
+    if(myShop != null) {
+      List users = myShop.subscribers!;
+      for(var userId in  users) {
+        final result  = await databases.getDocument(
+          databaseId: Credentials.DatabaseId,
+          collectionId: Credentials.UsersCollectonId,
+          documentId: userId,
+        );
+        MyUserModel currentUser = MyUserModel.fromJson(result.data);
+        myUsers.add(currentUser);
+      }
+      return myUsers;
+    }
+    return myUsers;
   }
 
   // get user
