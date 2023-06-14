@@ -1,28 +1,25 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:local_ease/helpers/dateTimeHelper.dart';
-import 'package:local_ease/models/user_model.dart';
-import 'package:local_ease/theme/app-theme.dart';
-import 'package:local_ease/utils/sizeConfig.dart';
 
+import '../helpers/dateTimeHelper.dart';
+import '../models/user_model.dart';
+import '../theme/app-theme.dart';
 import '../theme/colors.dart';
+import '../utils/sizeConfig.dart';
 
-class UserCard extends StatefulWidget {
+class SubscriberViewCard extends StatefulWidget {
   final MyUserModel myUser;
-  const UserCard({Key? key, required this.myUser}) : super(key: key);
+  const SubscriberViewCard({Key? key, required this.myUser}) : super(key: key);
 
   @override
-  State<UserCard> createState() => _UserCardState();
+  State<SubscriberViewCard> createState() => _SubscriberViewCardState();
 }
 
-class _UserCardState extends State<UserCard> {
+class _SubscriberViewCardState extends State<SubscriberViewCard> {
   @override
   Widget build(BuildContext context) {
-    log (widget.myUser.createdAt!);
     return Container(
       width: double.infinity,
-      height: SizeConfig.safeBlockVertical! * 18,
+      height: SizeConfig.safeBlockVertical! * 13.5,
       decoration: BoxDecoration(
         color: AppColors.white,
         boxShadow: const [
@@ -35,37 +32,31 @@ class _UserCardState extends State<UserCard> {
         borderRadius: BorderRadius.circular(15),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(8.0),
         child: Row(
           children: [
             Container(
               clipBehavior: Clip.antiAliasWithSaveLayer,
-              width: SizeConfig.safeBlockHorizontal! * 22,
-              height: SizeConfig.safeBlockHorizontal! * 22,
+              width: SizeConfig.safeBlockHorizontal! * 16,
+              height: SizeConfig.safeBlockHorizontal! * 16,
               decoration: BoxDecoration(
                 color: AppColors.tabGrey,
                 borderRadius:
-                    BorderRadius.circular(SizeConfig.safeBlockHorizontal! * 11),
+                BorderRadius.circular(SizeConfig.safeBlockHorizontal! * 8),
               ),
               child: Image.network(
                 widget.myUser.photo!,
                 fit: BoxFit.cover,
               ),
             ),
-            const SizedBox(width: 14,),
+            const SizedBox(width: 13,),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Text(widget.myUser.name!, style: textTheme.titleMedium, maxLines: 1, overflow: TextOverflow.ellipsis,),
+                Text(widget.myUser.name!, style: textTheme.titleMedium!.copyWith(fontSize: SizeConfig.safeBlockHorizontal!*4.7), maxLines: 1, overflow: TextOverflow.ellipsis,),
                 Text(widget.myUser.email!, style: textTheme.displaySmall, maxLines: 1, overflow: TextOverflow.ellipsis,),
                 Text( "Created on: ${DateTimeHelper.utcFormatDate(widget.myUser.createdAt!)}", style: textTheme.displaySmall, maxLines: 1, overflow: TextOverflow.ellipsis,),
-                Row(
-                  children: [
-                    Text("Account Type: ", style: textTheme.displaySmall!.copyWith( fontSize: SizeConfig.safeBlockHorizontal! * 4.2),),
-                    Text(widget.myUser.type!, style: textTheme.displaySmall!.copyWith(color: AppColors.pink, fontWeight: FontWeight.w600, fontSize: SizeConfig.safeBlockHorizontal! * 4.2, ),),
-                  ],
-                ),
               ],
             ),
           ],

@@ -8,6 +8,7 @@ import 'package:local_ease/theme/app-theme.dart';
 import 'package:local_ease/theme/colors.dart';
 import 'package:local_ease/utils/sizeConfig.dart';
 import 'package:local_ease/widgets/notification_card.dart';
+import 'package:local_ease/widgets/subscribers_view_card.dart';
 import 'package:local_ease/widgets/textfields.dart';
 
 import '../apis/APIs.dart';
@@ -248,7 +249,10 @@ class _InsightsPageState extends State<InsightsPage> {
                                     physics: BouncingScrollPhysics(),
                                     itemCount: data.length,
                                     itemBuilder: (context, index) {
-                                      return Text(data[index].name!);
+                                      return Padding(
+                                        padding: const EdgeInsets.only(top: 10),
+                                        child: SubscriberViewCard(myUser: data[index]),
+                                      );
                                     }),
                               )
                             : Center(
