@@ -129,6 +129,31 @@ class APIs {
       return myShopModel; // Returns null
     }
   }
+
+
+  /// Get Stores By Id
+
+  Future<ShopModel?> getStoreById(String id) async{
+    ShopModel? myShopModel;
+
+    try {
+      final result = await databases
+          .getDocument(
+        databaseId: Credentials.DatabaseId,
+        collectionId: Credentials.ShopsCollectionId,
+        documentId: id,
+      );
+      myShopModel = ShopModel.fromJson(result.data);
+
+      return myShopModel;
+    } catch (e) {
+      return myShopModel;
+    }
+
+  }
+
+
+
   // if docid == null create else update
 
   // Create Store
@@ -471,6 +496,31 @@ class APIs {
     } catch (e) {
       return myNotifications;
     }
+  }
+
+  Future<List<NotificationModel>> getUserNotifications() async {
+    List<NotificationModel> userNotifications = [];
+
+    try {
+      MyUserModel? myUser = await getUser();
+      List notifs = myUser!.notifications ?? [];
+
+      for(var notifid in notifs) {
+        final result = await databases.getDocument(
+          databaseId: Credentials.DatabaseId,
+          collectionId: Credentials.NotificationCollectionId,
+          documentId: notifid,
+        );
+        NotificationModel singleNotif = NotificationModel.fromJson(result.data);
+        userNotifications.add(singleNotif);
+      }
+
+      return userNotifications;
+    } catch (e) {
+      return userNotifications;
+    }
+
+
   }
 
 //todo : Items model and menu (Last Priority)

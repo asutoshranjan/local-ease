@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:local_ease/apis/APIs.dart';
 import 'package:local_ease/models/shop_model.dart';
+import 'package:local_ease/theme/app-theme.dart';
+import 'package:local_ease/theme/colors.dart';
 import 'package:local_ease/widgets/cards.dart';
+
+import '../widgets/subscribed_card.dart';
 
 class SubscribedPage extends StatefulWidget {
   const SubscribedPage({Key? key}) : super(key: key);
@@ -38,11 +42,14 @@ class _SubscribedPageState extends State<SubscribedPage> {
                 return ListView.builder(
                     itemCount: data.length,
                     itemBuilder: (context, index) {
-                      return MyCards(current_obj:  data[index].toJson());
+                      return MySubscriptionCard(current_obj:  data[index].toJson(),);
                     }
                 );
               } else {
-                return Text("You haven't subscribed to store yet");
+                return Padding(
+                  padding: const EdgeInsets.only(left: 15),
+                  child: Text("You haven't subscribed to store yet!", style: textTheme.titleMedium!.copyWith( fontSize: 18, color: AppColors.orange),),
+                );
               }
 
             }

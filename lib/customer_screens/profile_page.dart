@@ -10,7 +10,12 @@ import 'package:local_ease/models/notification.model.dart';
 import 'package:local_ease/theme/colors.dart';
 
 import '../auth/login_screen.dart';
+import '../models/user_model.dart';
+import '../theme/app-theme.dart';
 import '../utils/credentials.dart';
+import '../utils/sizeConfig.dart';
+import '../widgets/textfields.dart';
+import '../widgets/user_card.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -20,6 +25,9 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  TextEditingController nameController = TextEditingController();
+  TextEditingController photoController = TextEditingController();
+
   Databases databases = Databases(client);
 
   String databaseId = Credentials.DatabaseId;
@@ -104,140 +112,112 @@ class _ProfilePageState extends State<ProfilePage> {
         ],
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // FutureBuilder(
-            //   future: databases.getDocument(
-            //     databaseId: Credentials.DatabaseId,
-            //     collectionId: Credentials.UsersCollectonId,
-            //     documentId: '647766be1f5b8da450ae',
-            //   ),
-            //   builder: (context, snapshot) {
-            //     return snapshot.hasData && snapshot.data != null
-            //         ? ListTile(
-            //             leading: Text(snapshot.data!.data['name'].toString()),
-            //             // title: Text(snapshot.data!.data['following'].toString()),
-            //             trailing:
-            //                 Text(snapshot.data!.data['notifications'].toString()),
-            //           )
-            //         : Center(child: CircularProgressIndicator());
-            //   },
-            // ),
-
-            FutureBuilder(
-              future: APIs.account.get(),
-              builder: (ctx, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  if (snapshot.hasError) {
-                    return Center(
-                      child: Text(
-                        '${snapshot.error} occurred',
-                      ),
-                    );
-                  } else if (snapshot.hasData && snapshot.data != null) {
-                    return Center(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
+        physics: BouncingScrollPhysics(),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          child: Column(
+            children: [
+              FutureBuilder(
+                future: APIs.instance.getUser(),
+                builder: (ctx, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    if (snapshot.hasError) {
+                      return Center(
+                        child: Text(
+                          '${snapshot.error} occurred',
+                        ),
+                      );
+                    } else if (snapshot.hasData && snapshot.data != null) {
+                      MyUserModel currentUser = snapshot.data!;
+                      nameController =
+                          TextEditingController(text: currentUser.name);
+                      photoController =
+                          TextEditingController(text: currentUser.photo);
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            snapshot.data!.name,
-                            style: TextStyle(fontSize: 18),
+                          UserCard(myUser: snapshot.data!),
+                          SizedBox(
+                            height: SizeConfig.safeBlockVertical! * 4,
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                              color: AppColors.tabPink,
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 6),
+                              child: Text(
+                                "Edit Profile",
+                                style: textTheme.titleSmall!
+                                    .copyWith(color: AppColors.white),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 15,
                           ),
                           Text(
-                            snapshot.data!.email,
-                            style: TextStyle(fontSize: 18),
+                            "Email: ${currentUser.email}",
+                            style: textTheme.titleMedium!.copyWith(
+                                fontSize:
+                                SizeConfig.safeBlockHorizontal! * 4.5),
                           ),
-                          Text(
-                            snapshot.data!.$id,
-                            style: TextStyle(fontSize: 18),
+                          const SizedBox(
+                            height: 6,
+                          ),
+                          TextFieldInput(
+                            controller: nameController,
+                            title: 'Store Name',
+                            hintText: 'Enter Store Name',
+                            onChanged: (val) {},
+                          ),
+                          const SizedBox(
+                            height: 12,
+                          ),
+                          TextFieldInput(
+                            controller: photoController,
+                            title: 'Store Name',
+                            hintText: 'Enter Store Name',
+                            onChanged: (val) {},
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            children: [
+                              Spacer(),
+                              ElevatedButton(
+                                onPressed: () async {
+                                  currentUser.name = nameController.text;
+                                  currentUser.photo = photoController.text;
+                                  Dialogs.showLoaderDialog(context, "Saving");
+                                  await APIs.instance
+                                      .updateUserInfo(currentUser)
+                                      .then((value) {
+                                    Navigator.pop(context);
+                                    setState(() {});
+                                  });
+                                },
+                                child: const Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 3),
+                                  child: Text("Save Changes"),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
-                      ),
-                    );
+                      );
+                    }
                   }
-                }
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              },
-            ),
-
-            ElevatedButton(
-              onPressed: () {
-                Dialogs.showNotificationDialog(
-                    context, "This is decent long title", "desc");
-              },
-              child: Text("Pop Notif"),
-            ),
-
-            // DefaultTabController(
-            //   length: 2,
-            //   child: Container(
-            //     width: 400,
-            //     height: 500,
-            //     child: Scaffold(
-            //       appBar: AppBar(
-            //         bottom: PreferredSize(
-            //           preferredSize: Size.fromHeight(AppBar().preferredSize.height),
-            //           child: Container(
-            //             height: 50,
-            //             padding: const EdgeInsets.symmetric(
-            //               horizontal: 20,
-            //               vertical: 5,
-            //             ),
-            //             child: Container(
-            //               decoration: BoxDecoration(
-            //                 borderRadius: BorderRadius.circular(
-            //                   10,
-            //                 ),
-            //                 color: AppColors.tabGrey,
-            //               ),
-            //               child: TabBar(
-            //                 labelColor: AppColors.white,
-            //                 unselectedLabelColor: AppColors.grey,
-            //                 indicator: BoxDecoration(
-            //                   borderRadius: BorderRadius.circular(
-            //                     10,
-            //                   ),
-            //                   color: AppColors.tabPink,
-            //                 ),
-            //                 tabs: const [
-            //                   Tab(
-            //                     text: 'Manage Addresses',
-            //                   ),
-            //                   Tab(
-            //                     text: 'Edit Profile',
-            //                   )
-            //                 ],
-            //               ),
-            //             ),
-            //           ),
-            //         ),
-            //       ),
-            //       body: const TabBarView(
-            //         children: [
-            //           Center(
-            //             child: Text(
-            //               'Basic Settings',
-            //               style: TextStyle(
-            //                 fontSize: 30,
-            //               ),
-            //             ),
-            //           ),
-            //           Center(
-            //             child: Text(
-            //               'Advanced Settings',
-            //               style: TextStyle(
-            //                 fontSize: 30,
-            //               ),
-            //             ),
-            //           ),
-            //         ],
-            //       ),
-            //     ),
-            //   ),
-            // ),
-          ],
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

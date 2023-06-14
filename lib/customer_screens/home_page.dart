@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:local_ease/customer_screens/nearyou_page.dart';
+import 'package:local_ease/customer_screens/notification_page.dart';
 import 'package:local_ease/customer_screens/profile_page.dart';
 import 'package:local_ease/customer_screens/subscribed_page.dart';
 
@@ -31,6 +32,9 @@ class _HomePageState extends State<HomePage> {
         /// Subscribed Page
         const SubscribedPage(),
 
+        /// Aterts Page
+        const NotificationPage(),
+
         /// Profile Page
         const ProfilePage(),
       ].elementAt(_selectedIndex),
@@ -49,6 +53,10 @@ class _HomePageState extends State<HomePage> {
           BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.star),
             label: 'Subscribed',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(CupertinoIcons.bell),
+            label: 'Alerts',
           ),
           BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.person),

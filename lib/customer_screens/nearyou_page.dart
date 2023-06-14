@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
@@ -5,10 +6,17 @@ import 'package:flutter/material.dart';
 import 'package:local_ease/apis/APIs.dart';
 import 'package:local_ease/customer_screens/notification_page.dart';
 import 'package:local_ease/customer_screens/select_from_map.dart';
+import 'package:local_ease/helpers/distanceCalculator.dart';
 import 'package:local_ease/main.dart';
 import 'package:appwrite/appwrite.dart';
+import 'package:local_ease/models/shop_model.dart';
+import 'package:local_ease/models/user_model.dart';
+import 'package:local_ease/theme/app-theme.dart';
 import 'package:local_ease/utils/credentials.dart';
+import 'package:local_ease/utils/sizeConfig.dart';
+import 'package:open_street_map_search_and_pick/open_street_map_search_and_pick.dart';
 
+import '../theme/colors.dart';
 import '../widgets/cards.dart';
 
 class NearYouPage extends StatefulWidget {
@@ -20,6 +28,10 @@ class NearYouPage extends StatefulWidget {
 
 class _NearYouPageState extends State<NearYouPage> {
   Databases databases = Databases(client);
+  String lat = "";
+  String long = "";
+  String currentAddress = "Pick Location";
+  MyUserModel? currentUser;
 
   String databaseId = Credentials.DatabaseId;
   String collectionId = Credentials.ShopsCollectionId;
@@ -30,17 +42,36 @@ class _NearYouPageState extends State<NearYouPage> {
   @override
   void initState() {
     super.initState();
+    currentUserCall();
     loadItems();
     subscribe();
   }
 
+  currentUserCall() async{
+    currentUser = await APIs.instance.getUser();
 
-
+    if(currentUser != null) {
+      currentAddress = currentUser!.address ?? "";
+      lat = currentUser!.lat ?? "";
+      long = currentUser!.long ?? "";
+      setState(() {});
+    }
+  }
 
   loadItems() async {
     try {
+      currentUser = await APIs.instance.getUser();
       await databases
-          .listDocuments(databaseId: databaseId, collectionId: collectionId)
+          .listDocuments(
+          databaseId: databaseId, 
+          collectionId: collectionId,
+        queries: currentUser != null && currentUser!.country != null ? [
+          Query.equal("country", currentUser!.country!),
+          Query.equal("pincode", currentUser!.pincode!),
+          Query.equal("isopen", true),
+
+        ] : [Query.equal("isopen", true)],
+      )
           .then((value) {
         var currentDocs = value.documents;
         setState(() {
@@ -71,8 +102,20 @@ class _NearYouPageState extends State<NearYouPage> {
         if (data.events
             .contains("databases.*.collections.*.documents.*.create")) {
           var item = data.payload;
-          log("Item Added");
-          items.add(item);
+
+
+          ShopModel shop = ShopModel.fromJson(item);
+          if(currentUser != null && currentUser!.country != null && shop.isOpen == true) {
+            log("Item Added");
+            items.add(item);
+          } else if (shop.isOpen == true) {
+            log("Item Added but not of exact location");
+            items.add(item);
+          }
+
+
+          // log("Item Added");
+          // items.add(item);
           setState(() {});
         } else if (data.events
             .contains("databases.*.collections.*.documents.*.delete")) {
@@ -101,47 +144,126 @@ class _NearYouPageState extends State<NearYouPage> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        // title: Container(
-        //   height: 38,
-        //   width: 180,
-        //
-        //   decoration: BoxDecoration(
-        //     color: Colors.pink,
-        //     borderRadius: BorderRadius.circular(8),
-        //   ),
-        // ),
-        title: GestureDetector(
-          onTap: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => SelectFromMap(),
-                ));
-          },
-          child: Text('Location'),
-        ),
+        title: Text("LocalEase"),
         actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const NotificationPage(),
-                  ));
-            },
-            icon: const Icon(CupertinoIcons.bell),
+          Row(
+            children: [
+              GestureDetector(
+                onTap: () {
+                  showDialog(
+                    barrierDismissible: false,
+                    context: context,
+                    builder: (BuildContext context) {
+                      return Material(
+                        child: Container(
+                          padding: const EdgeInsets.all(0.0),
+                          width: screenWidth,
+                          height: screenWidth * 2,
+                          child: OpenStreetMapSearchAndPick(
+                              center: LatLong(
+                                  19.357640790268235, 84.97573036558032),
+                              buttonTextColor: AppColors.white,
+                              buttonColor: AppColors.pink,
+                              zoomInIcon: CupertinoIcons.zoom_in,
+                              zoomOutIcon: CupertinoIcons.zoom_out,
+                              locationPinIconColor: AppColors.pink,
+                              buttonText: 'Set This Location',
+                              onPicked: (pickedData) async{
+                                print(pickedData.latLong.latitude);
+                                print(pickedData.latLong.longitude);
+                                print(pickedData.address);
+
+                                lat = pickedData.latLong.latitude.toString();
+                                long = pickedData.latLong.longitude.toString();
+                                currentAddress = pickedData.address;
+
+                                List arr = currentAddress.split(", ");
+
+                                if(currentUser != null) {
+                                  currentUser!.country = arr[arr.length - 1];
+                                  currentUser!.pincode = arr[arr.length - 2];
+                                  currentUser!.district = arr[arr.length - 3];
+                                  currentUser!.address = currentAddress;
+                                  currentUser!.lat = lat;
+                                  currentUser!.long = long;
+
+
+                                  await APIs.instance.updateUserInfo(currentUser!).then((value) {
+                                    setState(() {});
+                                    loadItems();
+                                    Navigator.pop(context);
+                                  });
+                                }
+                                setState(() {});
+                              }),
+                        ),
+                      );
+                    },
+                  );
+                },
+                child: Container(
+                  height: SizeConfig.safeBlockVertical! * 4.7,
+                  width: SizeConfig.safeBlockHorizontal! * 44,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: AppColors.white,
+                    boxShadow: const [
+                      BoxShadow(
+                        offset: Offset(1, 1),
+                        blurRadius: 2.5,
+                        color: Color.fromRGBO(0, 0, 0, 0.10),
+                      )
+                    ],
+                  ),
+                  child: Center(
+                      child: Row(
+                    children: [
+                      const SizedBox(width: 4),
+                      const Icon(
+                        Icons.location_on_outlined,
+                        size: 22,
+                      ),
+                      const SizedBox(width: 3),
+                      SizedBox(
+                        width: SizeConfig.safeBlockHorizontal! * 34.5,
+                        child: Text(
+                          currentAddress,
+                          style: textTheme.displaySmall,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  )),
+                ),
+              ),
+              SizedBox(
+                width: 15,
+              ),
+            ],
           ),
         ],
       ),
-      body: ListView.builder(
+      body: items.isNotEmpty ? ListView.builder(
           physics: const BouncingScrollPhysics(),
           itemCount: items.length,
           itemBuilder: (BuildContext context, int index) {
             Map<String, dynamic> current_obj = items[index];
-            return MyCards(current_obj: current_obj,);
-          }),
+            ShopModel shop = ShopModel.fromJson(current_obj);
+            return MyCards(
+              current_obj: current_obj,
+              dis: lat == ""
+                  ? ""
+                  : """${DistanceCalculator.calculateDistance(
+                          lat, long, shop.lat!, shop.long!)
+                      .toStringAsFixed(1)}Km""",
+            );
+          }) : Padding(
+            padding: const EdgeInsets.only(left: 15.0),
+            child: Text("Oops! No stores to show", style: textTheme.titleMedium!.copyWith( fontSize: 18, color: AppColors.orange),),
+          ),
     );
   }
 }
