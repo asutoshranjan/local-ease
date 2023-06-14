@@ -4,6 +4,8 @@ import 'package:local_ease/customer_screens/full_shop_page.dart';
 import 'package:local_ease/theme/app-theme.dart';
 import 'package:local_ease/theme/colors.dart';
 
+import '../helpers/dialogs.dart';
+
 class MyCards extends StatefulWidget {
   final Map<String, dynamic> current_obj;
   const MyCards({Key? key, required this.current_obj}) : super(key: key);
@@ -134,12 +136,31 @@ class _MyCardsState extends State<MyCards> {
                             child: Text("Subscribed"),
                           )
                               : TextButton(
-                            onPressed: () async{
-                              List subs = widget.current_obj['subscribers'];
-                              String shopId = widget.current_obj['ownerid'];
-                              await APIs.instance.subscribe(shopId, subs);
+                            onPressed: () async {
+                              Dialogs.showOpenCloseDialog(
+                                context: context,
+                                title: "Notifications on the go!",
+                                description:
+                                "Confirm that you want to subscribe ${widget.current_obj['name']} you will be get updates as notification from store",
+                                onBtnClk: () async {
+                                  List subs =
+                                  widget.current_obj['subscribers'];
+                                  String shopId =
+                                  widget.current_obj['ownerid'];
+                                  await APIs.instance
+                                      .subscribe(shopId, subs).then((value) {
+                                    setState(() {});
+                                    Navigator.pop(context);
+                                  });
+                                },
+                                icon: Icons.notifications_active_outlined,
+                              );
                             },
-                            child: Text("Subscribe"),
+                            child: const Padding(
+                              padding:
+                              EdgeInsets.symmetric(horizontal: 4.5),
+                              child: Text("Subscribe"),
+                            ),
                           );
                         }
                       return SizedBox();

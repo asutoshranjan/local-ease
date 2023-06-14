@@ -4,7 +4,9 @@ import 'package:appwrite/appwrite.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:local_ease/apis/APIs.dart';
+import 'package:local_ease/helpers/dialogs.dart';
 import 'package:local_ease/main.dart';
+import 'package:local_ease/models/notification.model.dart';
 import 'package:local_ease/theme/colors.dart';
 
 import '../auth/login_screen.dart';
@@ -21,11 +23,18 @@ class _ProfilePageState extends State<ProfilePage> {
   Databases databases = Databases(client);
 
   String databaseId = Credentials.DatabaseId;
-  String collectionId = Credentials.ShopsCollectionId;
+  String collectionId = Credentials.NotificationCollectionId;
   late RealtimeSubscription subscription;
 
+  @override
+  void initState() {
+    super.initState();
+    subscribe();
+  }
 
-  void subscribe() {
+  void subscribe() async {
+    final myId = await APIs.instance.getUserID();
+
     final realtime = Realtime(client);
 
     subscription = realtime.subscribe(
@@ -39,9 +48,13 @@ class _ProfilePageState extends State<ProfilePage> {
         log("there is some change");
         if (data.events
             .contains("databases.*.collections.*.documents.*.create")) {
-          var item = data.payload;
+          var item = NotificationModel.fromJson(data.payload);
           log("Item Added");
-          //items.add(item);
+          //items.add(item);  current as '648532544505f9fa08ea'
+          if (item.users!.contains(myId)) {
+            Dialogs.showNotificationDialog(context, item.title!, item.description!);
+          }
+
           setState(() {});
         } else if (data.events
             .contains("databases.*.collections.*.documents.*.delete")) {
@@ -53,7 +66,7 @@ class _ProfilePageState extends State<ProfilePage> {
             .contains("databases.*.collections.*.documents.*.update")) {
           var item = data.payload;
           log("item update");
-         // int idx = items.indexWhere((it) => it['\$id'] == item['\$id']);
+          // int idx = items.indexWhere((it) => it['\$id'] == item['\$id']);
           // log("${idx} is the index");
           // items[idx] = item;
           // setState(() {});
@@ -76,7 +89,6 @@ class _ProfilePageState extends State<ProfilePage> {
         actions: [
           IconButton(
             onPressed: () {
-
               APIs.instance.logout();
               ScaffoldMessenger.of(context)
                   .showSnackBar(const SnackBar(content: Text('Logged Out')));
@@ -86,9 +98,6 @@ class _ProfilePageState extends State<ProfilePage> {
                   builder: (_) => const LoginPage(),
                 ),
               );
-
-
-
             },
             icon: const Icon(Icons.logout),
           ),
@@ -97,7 +106,6 @@ class _ProfilePageState extends State<ProfilePage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-
             // FutureBuilder(
             //   future: databases.getDocument(
             //     databaseId: Credentials.DatabaseId,
@@ -115,7 +123,6 @@ class _ProfilePageState extends State<ProfilePage> {
             //         : Center(child: CircularProgressIndicator());
             //   },
             // ),
-
 
             FutureBuilder(
               future: APIs.account.get(),
@@ -155,6 +162,13 @@ class _ProfilePageState extends State<ProfilePage> {
               },
             ),
 
+            ElevatedButton(
+              onPressed: () {
+                Dialogs.showNotificationDialog(
+                    context, "This is decent long title", "desc");
+              },
+              child: Text("Pop Notif"),
+            ),
 
             // DefaultTabController(
             //   length: 2,
@@ -223,8 +237,6 @@ class _ProfilePageState extends State<ProfilePage> {
             //     ),
             //   ),
             // ),
-
-
           ],
         ),
       ),

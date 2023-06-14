@@ -6,8 +6,9 @@ class MyUserModel{
   String? photo;
   String? type;
   String? docId;
+  String? createdAt;
 
-  MyUserModel({this.name, this.following, this.notifications, this.email, this.photo, this.docId, this.type});
+  MyUserModel({this.name, this.following, this.notifications, this.email, this.photo, this.docId, this.type, this.createdAt});
   MyUserModel.fromJson(Map<String,dynamic> json){
     name = json['name'];
     following = json['following'];
@@ -16,6 +17,7 @@ class MyUserModel{
     photo = json['photo'];
     type = json['type'];
     docId = json['docid'];
+    createdAt = json['\$createdAt'];
   }
 
   Map<String, dynamic> toJson(){

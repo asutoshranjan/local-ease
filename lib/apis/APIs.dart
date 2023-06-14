@@ -1,5 +1,10 @@
+import 'dart:developer';
+
 import 'package:appwrite/appwrite.dart';
 import 'package:appwrite/models.dart' as models;
+import 'package:flutter/cupertino.dart';
+import 'package:local_ease/helpers/dialogs.dart';
+import 'package:local_ease/models/notification.model.dart';
 import 'package:local_ease/models/shop_model.dart';
 import 'package:local_ease/models/user_model.dart';
 import 'package:local_ease/utils/credentials.dart';
@@ -42,6 +47,19 @@ class APIs {
       final models.Session response =
           await account.createEmailSession(email: email, password: password);
       prefs.setString('userId', response.userId);
+      prefs.setString('email', email);
+      prefs.setString('password', password);
+      setLoggedIn(true);
+      return true;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<bool> fakeLoginEmailPassword(String email, String password) async {
+    final SharedPreferences prefs = await _prefs;
+    try {
+      prefs.setString('userId', "648532db6388a34cc3f6");
       prefs.setString('email', email);
       prefs.setString('password', password);
       setLoggedIn(true);
@@ -107,7 +125,7 @@ class APIs {
       });
 
       return myShopModel;
-    } catch(e) {
+    } catch (e) {
       return myShopModel; // Returns null
     }
   }
@@ -137,7 +155,7 @@ class APIs {
   }
 
   // Update Store
-  updateShopInfo(ShopModel currentShop) async {
+  Future<void> updateShopInfo(ShopModel currentShop) async {
     try {
       await databases.updateDocument(
         databaseId: Credentials.DatabaseId,
@@ -163,9 +181,101 @@ class APIs {
     }
   }
 
+  // Add a new notification
+  Future<void> createNotification(NotificationModel currentNotification) async{
+    // String docId = uuid.v1();
+
+    // try {
+    //
+    //   await databases.createDocument(
+    //     databaseId: Credentials.DatabaseId,
+    //     collectionId: "64888887b926a4ef24f5",
+    //     documentId: docId,
+    //     data: currentNotification.toJson(),
+    //   );
+    //
+    // } catch (e) {
+    //   rethrow;
+    // }
+
+    //todo: Set data in notif collection
+    //todo: Set the  notif id in users notif list
+
+
+    // ShopModel? myShop;
+    // await getUserID().then((userId) async {
+    //   await databases
+    //       .getDocument(
+    //     databaseId: Credentials.DatabaseId,
+    //     collectionId: Credentials.ShopsCollectionId,
+    //     documentId: userId!,
+    //   )
+    //       .then((value) async{
+    //     if (value.data != null) {
+    //       myShop = ShopModel.fromJson(value.data);
+    //       String docId = uuid.v1();
+    //       NotificationModel myNotification = currentNotification;
+    //       myNotification.notificationId = docId;
+    //       myNotification.shopid = myShop!.ownerId;
+    //       myNotification.users = myShop!.subscribers;
+    //       await databases.createDocument(
+    //         databaseId: Credentials.DatabaseId,
+    //         collectionId: Credentials.NotificationCollectionId,
+    //         documentId: docId,
+    //         data: myNotification.toJson(),
+    //       );
+    //       log("Notif sent");
+    //     }
+    //   });
+    // });
+
+    // ShopModel? myShop = await getStore();
+    // String docId = uuid.v1();
+    //      NotificationModel myNotification = currentNotification;
+    //      myNotification.notificationId = docId;
+    //      myNotification.shopid = myShop!.ownerId;
+    //      myNotification.users = myShop.subscribers;
+    //      await databases.createDocument(
+    //              databaseId: Credentials.DatabaseId,
+    //              collectionId: Credentials.NotificationCollectionId,
+    //              documentId: ID.unique(),
+    //              data: myNotification.toJson(),
+    //            );
+
+
+     getStore().then((myShop) async{
+          String docId = uuid.v1();
+          NotificationModel myNotification = currentNotification;
+          myNotification.notificationId = docId;
+          myNotification.shopid = myShop!.ownerId;
+          myNotification.users = myShop.subscribers;
+          try {
+           await databases.createDocument(
+              databaseId: Credentials.DatabaseId,
+              collectionId: Credentials.NotificationCollectionId,
+              documentId: docId,
+              data: myNotification.toJson(),
+            );
+
+           List<MyUserModel> subUsers = await getSubscribedUsers();
+
+           for (MyUserModel user in subUsers) {
+             user.notifications!.add(docId);
+             await updateUserInfo(user);
+           }
+           log("Notif sent");
+          } catch (e) {
+            rethrow;
+          }
+
+      });
+
+
+  }
+
   // Subscribe
 
-  subscribe(String shopId, List subscribers) async {
+  Future<void> subscribe(String shopId, List subscribers) async {
     try {
       // add to shop subscription list
       await getUserID().then((userId) async {
@@ -199,6 +309,39 @@ class APIs {
     }
   }
 
+  Future<void> unSubscribe(String shopId, List subscribers) async {
+    try {
+      // add to shop subscription list
+      await getUserID().then((userId) async {
+        subscribers.remove(userId);
+        await databases.updateDocument(
+          databaseId: Credentials.DatabaseId,
+          collectionId: Credentials.ShopsCollectionId,
+          documentId: shopId,
+          data: {
+            "subscribers": subscribers,
+          },
+        );
+
+        await getUser().then((value) {
+          List subs = value!.following!;
+          subs.remove(shopId);
+          databases.updateDocument(
+            databaseId: Credentials.DatabaseId,
+            collectionId: Credentials.UsersCollectonId,
+            documentId: value.docId!,
+            data: {
+              "following": subs,
+            },
+          );
+        });
+      }
+        // add to user subscribed list list
+      );
+    } catch (e) {
+      rethrow;
+    }
+  }
 
   // For getting users subscribed stores
 
@@ -227,15 +370,15 @@ class APIs {
 
   // For getting subscribed users
 
-  Future<List<MyUserModel>> getSubscribedUsers() async{
+  Future<List<MyUserModel>> getSubscribedUsers() async {
     List<MyUserModel> myUsers = [];
 
     ShopModel? myShop = await getStore();
 
-    if(myShop != null) {
+    if (myShop != null) {
       List users = myShop.subscribers!;
-      for(var userId in  users) {
-        final result  = await databases.getDocument(
+      for (var userId in users) {
+        final result = await databases.getDocument(
           databaseId: Credentials.DatabaseId,
           collectionId: Credentials.UsersCollectonId,
           documentId: userId,
@@ -300,7 +443,7 @@ class APIs {
     try {
       await databases.updateDocument(
         databaseId: Credentials.DatabaseId,
-        collectionId: Credentials.ShopsCollectionId,
+        collectionId: Credentials.UsersCollectonId,
         documentId: currentUser.docId!,
         data: currentUser.toJson(),
       );
@@ -308,4 +451,27 @@ class APIs {
       rethrow;
     }
   }
+
+  Future<List<NotificationModel>> getShopNotifications() async {
+    List<NotificationModel> myNotifications = [];
+    
+    try {
+      String? userId = await getUserID();
+      final result = await databases.listDocuments(
+        databaseId: Credentials.DatabaseId,
+        collectionId: Credentials.NotificationCollectionId,
+        queries: [
+          Query.equal("shopid", userId),
+          Query.orderDesc("\$createdAt"),
+        ],
+      );
+     myNotifications = result.documents.map((e) => NotificationModel.fromJson(e.data)).toList() ?? [];
+
+      return myNotifications;
+    } catch (e) {
+      return myNotifications;
+    }
+  }
+
+//todo : Items model and menu (Last Priority)
 }
