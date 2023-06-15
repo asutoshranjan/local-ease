@@ -141,7 +141,7 @@ class _MySubscriptionCardState extends State<MySubscriptionCard> {
                       style: ElevatedButton.styleFrom(backgroundColor: AppColors.tabGrey, foregroundColor:  AppColors.grey),
                       onPressed: () {},
                       child: const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 11),
+                        padding: EdgeInsets.symmetric(horizontal: 13),
                         child: Text("Closed"),
                       ),
                     ),

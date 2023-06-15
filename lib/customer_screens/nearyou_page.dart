@@ -14,6 +14,8 @@ import 'package:local_ease/models/user_model.dart';
 import 'package:local_ease/theme/app-theme.dart';
 import 'package:local_ease/utils/credentials.dart';
 import 'package:local_ease/utils/sizeConfig.dart';
+import 'package:local_ease/widgets/subscribed_card.dart';
+import 'package:local_ease/widgets/textfields.dart';
 import 'package:open_street_map_search_and_pick/open_street_map_search_and_pick.dart';
 
 import '../theme/colors.dart';
@@ -28,6 +30,7 @@ class NearYouPage extends StatefulWidget {
 
 class _NearYouPageState extends State<NearYouPage> {
   Databases databases = Databases(client);
+  String txtQuery = "";
   String lat = "";
   String long = "";
   String currentAddress = "Pick Location";
@@ -47,10 +50,10 @@ class _NearYouPageState extends State<NearYouPage> {
     subscribe();
   }
 
-  currentUserCall() async{
+  currentUserCall() async {
     currentUser = await APIs.instance.getUser();
 
-    if(currentUser != null) {
+    if (currentUser != null) {
       currentAddress = currentUser!.address ?? "";
       lat = currentUser!.lat ?? "";
       long = currentUser!.long ?? "";
@@ -63,14 +66,15 @@ class _NearYouPageState extends State<NearYouPage> {
       currentUser = await APIs.instance.getUser();
       await databases
           .listDocuments(
-          databaseId: databaseId, 
-          collectionId: collectionId,
-        queries: currentUser != null && currentUser!.country != null ? [
-          Query.equal("country", currentUser!.country!),
-          Query.equal("pincode", currentUser!.pincode!),
-          Query.equal("isopen", true),
-
-        ] : [Query.equal("isopen", true)],
+        databaseId: databaseId,
+        collectionId: collectionId,
+        queries: currentUser != null && currentUser!.country != null
+            ? [
+                Query.equal("country", currentUser!.country!),
+                Query.equal("pincode", currentUser!.pincode!),
+                Query.equal("isopen", true),
+              ]
+            : [Query.equal("isopen", true)],
       )
           .then((value) {
         var currentDocs = value.documents;
@@ -103,16 +107,19 @@ class _NearYouPageState extends State<NearYouPage> {
             .contains("databases.*.collections.*.documents.*.create")) {
           var item = data.payload;
 
-
           ShopModel shop = ShopModel.fromJson(item);
-          if(currentUser != null && currentUser!.country != null && shop.isOpen == true) {
-            log("Item Added");
-            items.add(item);
-          } else if (shop.isOpen == true) {
+          if (currentUser != null &&
+              currentUser!.country != null &&
+              shop.isOpen == true) {
+            if (currentUser!.country! == shop.country &&
+                currentUser!.pincode == shop.pincode) {
+              log("Item Added");
+              items.add(item);
+            }
+          } else if (currentUser!.country == null && shop.isOpen == true) {
             log("Item Added but not of exact location");
             items.add(item);
           }
-
 
           // log("Item Added");
           // items.add(item);
@@ -148,6 +155,30 @@ class _NearYouPageState extends State<NearYouPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("LocalEase"),
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(AppBar().preferredSize.height),
+          child: Padding(
+            padding:  const EdgeInsets.only(left: 12, right: 12, bottom: 11),
+            child: TextFieldInput(
+              // controller: phoneController,
+              // title: 'Phone',
+              hintText: 'Search for any store here..',
+              suffixIcon: txtQuery == ""
+                  ? SizedBox()
+                  : IconButton(
+                      icon: Icon(Icons.close),
+                      onPressed: () {
+                        txtQuery = "";
+                        setState(() {});
+                      },
+                    ),
+              onChanged: (val) {
+                txtQuery = val;
+                setState(() {});
+              },
+            ),
+          ),
+        ),
         actions: [
           Row(
             children: [
@@ -171,7 +202,7 @@ class _NearYouPageState extends State<NearYouPage> {
                               zoomOutIcon: CupertinoIcons.zoom_out,
                               locationPinIconColor: AppColors.pink,
                               buttonText: 'Set This Location',
-                              onPicked: (pickedData) async{
+                              onPicked: (pickedData) async {
                                 print(pickedData.latLong.latitude);
                                 print(pickedData.latLong.longitude);
                                 print(pickedData.address);
@@ -182,7 +213,7 @@ class _NearYouPageState extends State<NearYouPage> {
 
                                 List arr = currentAddress.split(", ");
 
-                                if(currentUser != null) {
+                                if (currentUser != null) {
                                   currentUser!.country = arr[arr.length - 1];
                                   currentUser!.pincode = arr[arr.length - 2];
                                   currentUser!.district = arr[arr.length - 3];
@@ -190,8 +221,9 @@ class _NearYouPageState extends State<NearYouPage> {
                                   currentUser!.lat = lat;
                                   currentUser!.long = long;
 
-
-                                  await APIs.instance.updateUserInfo(currentUser!).then((value) {
+                                  await APIs.instance
+                                      .updateUserInfo(currentUser!)
+                                      .then((value) {
                                     setState(() {});
                                     loadItems();
                                     Navigator.pop(context);
@@ -246,24 +278,77 @@ class _NearYouPageState extends State<NearYouPage> {
           ),
         ],
       ),
-      body: items.isNotEmpty ? ListView.builder(
-          physics: const BouncingScrollPhysics(),
-          itemCount: items.length,
-          itemBuilder: (BuildContext context, int index) {
-            Map<String, dynamic> current_obj = items[index];
-            ShopModel shop = ShopModel.fromJson(current_obj);
-            return MyCards(
-              current_obj: current_obj,
-              dis: lat == ""
-                  ? ""
-                  : """${DistanceCalculator.calculateDistance(
-                          lat, long, shop.lat!, shop.long!)
-                      .toStringAsFixed(1)}Km""",
-            );
-          }) : Padding(
-            padding: const EdgeInsets.only(left: 15.0),
-            child: Text("Oops! No stores to show", style: textTheme.titleMedium!.copyWith( fontSize: 18, color: AppColors.orange),),
-          ),
+      body: txtQuery == ""
+          ? items.isNotEmpty
+              ? ListView.builder(
+                  physics: const BouncingScrollPhysics(),
+                  itemCount: items.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    Map<String, dynamic> current_obj = items[index];
+                    ShopModel shop = ShopModel.fromJson(current_obj);
+                    return MyCards(
+                      current_obj: current_obj,
+                      dis: lat == ""
+                          ? ""
+                          : """${DistanceCalculator.calculateDistance(lat, long, shop.lat!, shop.long!).toStringAsFixed(1)}Km""",
+                    );
+                  })
+              : Padding(
+                  padding: const EdgeInsets.only(left: 15.0),
+                  child: Text(
+                    "Oops! No stores to show",
+                    style: textTheme.titleMedium!
+                        .copyWith(fontSize: 18, color: AppColors.orange),
+                  ),
+                )
+          : FutureBuilder(
+              future: databases.listDocuments(
+                databaseId: databaseId,
+                collectionId: collectionId,
+                queries: [Query.search("name", txtQuery)],
+              ),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  if (snapshot.hasError) {
+                    return Center(
+                      child: Text(
+                        '${snapshot.error} occurred',
+                      ),
+                    );
+                  } else if (snapshot.hasData && snapshot.data != null) {
+                    List<ShopModel> resultShops = snapshot.data!.documents
+                            .map((e) => ShopModel.fromJson(e.data))
+                            .toList() ?? [];
+
+                    if (resultShops.isNotEmpty) {
+                      return ListView.builder(
+                        physics: BouncingScrollPhysics(),
+                        itemCount: resultShops.length,
+                        itemBuilder: (context, index) {
+                          ShopModel shop = resultShops[index];
+                          return  MyCards(
+                            current_obj: shop.toJson(),
+                            dis: lat == ""
+                                ? ""
+                                : """${DistanceCalculator.calculateDistance(lat, long, shop.lat!, shop.long!).toStringAsFixed(1)}Km""",
+                          );
+
+                          // return MySubscriptionCard(current_obj: shop.toJson());
+
+                        },
+                      );
+                    } else {
+                      return Padding(
+                        padding: const EdgeInsets.only(left: 15),
+                        child: Text("Sorry! Cannot find any relevant result", style: textTheme.titleMedium!.copyWith( fontSize: 18, color: AppColors.orange),),
+                      );
+                    }
+                  }
+                }
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }),
     );
   }
 }
