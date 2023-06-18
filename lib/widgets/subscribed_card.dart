@@ -131,11 +131,19 @@ class _MySubscriptionCardState extends State<MySubscriptionCard> {
                     ),
 
                     widget.current_obj['isopen'] ? TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => FullShopViewPage(
+                                current_obj: widget.current_obj,
+                              ),
+                            ));
+                      },
                       child: const Padding(
                         padding:
-                        EdgeInsets.symmetric(horizontal: 11),
-                        child: Text("Opened"),
+                        EdgeInsets.symmetric(horizontal: 20),
+                        child: Text("Open"),
                       ),
                     ): TextButton(
                       style: ElevatedButton.styleFrom(backgroundColor: AppColors.tabGrey, foregroundColor:  AppColors.grey),

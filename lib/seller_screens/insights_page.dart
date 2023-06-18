@@ -33,7 +33,23 @@ class _InsightsPageState extends State<InsightsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Helpful Insights"),
+        // title: Text("Helpful Insights"),
+
+        title:  RichText(
+          text: TextSpan(
+            text: 'Helpful ',
+            style: textTheme.titleLarge!.copyWith(
+              fontWeight: FontWeight.w600,
+              color: AppColors.black,),
+            /*defining default style is optional */
+            children: const <TextSpan>[
+              TextSpan(
+                text: 'Insights',
+                style: TextStyle(color: AppColors.pink),
+              ),
+            ],
+          ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15),

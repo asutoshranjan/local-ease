@@ -129,7 +129,7 @@ class _MyCardsState extends State<MyCards> {
                           ),
                           Container(
                             height: 65,
-                            width: SizeConfig.safeBlockHorizontal! * 65,
+                            width: SizeConfig.safeBlockHorizontal! * 60,
                             clipBehavior: Clip.antiAliasWithSaveLayer,
                             decoration: const BoxDecoration(),
                             child: Wrap(
@@ -189,7 +189,6 @@ class _MyCardsState extends State<MyCards> {
                                 await APIs.instance
                                     .subscribe(shopId, subs).then((value) {
                                   setState(() {});
-                                  Navigator.pop(context);
                                 });
                               },
                               icon: Icons.notifications_active_outlined,

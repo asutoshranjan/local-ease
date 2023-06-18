@@ -1,7 +1,9 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:appwrite/appwrite.dart';
 import 'package:appwrite/models.dart' as models;
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:local_ease/helpers/dialogs.dart';
 import 'package:local_ease/models/notification.model.dart';
@@ -23,6 +25,8 @@ class APIs {
   static final account = Account(client);
 
   static final databases = Databases(client);
+
+  static final storage = Storage(client);
 
   var uuid = Uuid(); // Generates UniqueIDs
 
@@ -519,8 +523,42 @@ class APIs {
     } catch (e) {
       return userNotifications;
     }
+  }
 
+  Future<String?> uploadPhoto(BuildContext context) async{
+    String? url;
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['jpg', 'png', 'gif'],
+    );
 
+    String id = uuid.v1();
+
+    if (result != null) {
+      File file = File(result.files.single.path!);
+      log(file.path);
+      String fileName = result.files.single.name;
+
+      Future result2 = storage.createFile(
+        bucketId: Credentials.PhotosBucketId, //eihieiofhhiqhi
+        fileId: id,
+        file: InputFile(
+          path: file.path,
+        ),
+      );
+
+      result2.then((response) {
+        log("Pic Uploaded");
+        return 'https://cloud.appwrite.io/v1/storage/buckets/${Credentials.PhotosBucketId}/files/${id}/view?project=${Credentials.ProjectID}';
+      }).catchError((error) {
+        print(error.response);
+        Dialogs.showSnackbar(context, "${error}");
+      });
+    } else {
+      // User canceled the picker
+      Dialogs.showSnackbar(context, "Unable to upload canceled in between");
+    }
+    return url;
   }
 
 //todo : Items model and menu (Last Priority)

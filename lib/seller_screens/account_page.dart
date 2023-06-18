@@ -1,3 +1,7 @@
+import 'dart:developer';
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:appwrite/appwrite.dart';
 import 'package:local_ease/auth/login_screen.dart';
@@ -6,6 +10,7 @@ import 'package:local_ease/theme/app-theme.dart';
 import 'package:local_ease/theme/colors.dart';
 import 'package:local_ease/utils/sizeConfig.dart';
 import 'package:local_ease/widgets/user_card.dart';
+import 'package:uuid/uuid.dart';
 import '../apis/APIs.dart';
 import '../helpers/dialogs.dart';
 import '../main.dart';
@@ -22,12 +27,32 @@ class SellerAccountPage extends StatefulWidget {
 class _SellerAccountPageState extends State<SellerAccountPage> {
   TextEditingController nameController = TextEditingController();
   TextEditingController photoController = TextEditingController();
+  String? photoUrl;
+  var uuid = Uuid();
+  final storage = Storage(client);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("AppName Profile"),
+        // title: Text("AppName Profile"),
+
+        title: RichText(
+          text: TextSpan(
+            text: 'LocalEase ',
+            style: textTheme.titleLarge!.copyWith(
+              fontWeight: FontWeight.w600,
+              color: AppColors.black,),
+            /*defining default style is optional */
+            children: const <TextSpan>[
+              TextSpan(
+                text: 'Profile',
+                style: TextStyle(color: AppColors.pink),
+              ),
+            ],
+          ),
+        ),
+
         actions: [
           IconButton(
             onPressed: () {
@@ -67,6 +92,7 @@ class _SellerAccountPageState extends State<SellerAccountPage> {
                           TextEditingController(text: currentUser.name);
                       photoController =
                           TextEditingController(text: currentUser.photo);
+                      photoUrl = currentUser.photo;
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -108,16 +134,91 @@ class _SellerAccountPageState extends State<SellerAccountPage> {
                             onChanged: (val) {},
                           ),
                           const SizedBox(
-                            height: 12,
-                          ),
-                          TextFieldInput(
-                            controller: photoController,
-                            title: 'Store Name',
-                            hintText: 'Enter Store Name',
-                            onChanged: (val) {},
+                            height: 8,
                           ),
                           const SizedBox(
+                            height: 8,
+                          ),
+                          Text(
+                            'Photo',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .copyWith(
+                              color: Theme.of(context).hintColor,
+                              letterSpacing: 0.1,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 9,
+                          ),
+
+                          photoUrl != null ? Center(
+                            child: Container(
+                                height: 120,
+                                width: 120,
+                                clipBehavior: Clip.antiAliasWithSaveLayer,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Image.network(
+                                  photoUrl ?? 'https://imgv3.fotor.com/images/blog-cover-image/part-blurry-image.jpg' ,
+                                  fit: BoxFit.cover,
+                                )),
+                          ): Text("Photo not selected yet"),
+                          const SizedBox(
                             height: 10,
+                          ),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.tabGrey,
+                            ),
+                            onPressed: () async{
+
+                              FilePickerResult? result = await FilePicker.platform.pickFiles(
+                                type: FileType.custom,
+                                allowedExtensions: ['jpg', 'png', 'gif'],
+                              );
+
+                              String id = uuid.v1();
+
+                              if (result != null) {
+                                File file = File(result.files.single.path!);
+                                log(file.path);
+                                String fileName = result.files.single.name;
+
+                                Future result2 = storage.createFile(
+                                  bucketId: Credentials.PhotosBucketId,
+                                  fileId: id,
+                                  file: InputFile(
+                                    path: file.path,
+                                  ),
+                                );
+
+                                result2.then((response) async{
+                                  log("Pic Uploaded");
+                                  photoUrl = 'https://cloud.appwrite.io/v1/storage/buckets/${Credentials.PhotosBucketId}/files/${id}/view?project=${Credentials.ProjectID}';
+                                  currentUser.photo = photoUrl;
+                                  Dialogs.showLoaderDialog(context, "Saving Photo");
+                                  await APIs.instance
+                                      .updateUserInfo(currentUser)
+                                      .then((value) {
+                                    Navigator.pop(context);
+                                    setState(() {});
+                                  });
+                                }).catchError((error) {
+                                  print(error.response);
+                                  Dialogs.showSnackbar(context, "${error}");
+                                });
+                              } else {
+                                // User canceled the picker
+                                Dialogs.showSnackbar(context, "Unable to upload canceled in between");
+                              }
+                            },
+                            child: Text("Upload Image", style: textTheme.titleSmall!.copyWith(color: AppColors.grey),),
+                          ),
+                          const SizedBox(
+                            height: 20,
                           ),
                           Row(
                             children: [
@@ -125,7 +226,7 @@ class _SellerAccountPageState extends State<SellerAccountPage> {
                               ElevatedButton(
                                 onPressed: () async {
                                   currentUser.name = nameController.text;
-                                  currentUser.photo = photoController.text;
+                                  currentUser.photo = photoUrl;
                                   Dialogs.showLoaderDialog(context, "Saving");
                                   await APIs.instance
                                       .updateUserInfo(currentUser)
@@ -140,6 +241,9 @@ class _SellerAccountPageState extends State<SellerAccountPage> {
                                 ),
                               ),
                             ],
+                          ),
+                          const SizedBox(
+                            height: 20,
                           ),
                         ],
                       );

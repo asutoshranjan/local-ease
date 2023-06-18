@@ -21,6 +21,8 @@ dependencies:
   date_time_picker: ^2.1.0
   open_street_map_search_and_pick: ^0.0.17
   url_launcher: ^6.1.11
+  file_picker: ^5.0.2
+  carousel_slider: ^4.2.1
 
 dev_dependencies:
   flutter_test:

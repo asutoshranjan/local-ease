@@ -18,6 +18,8 @@ import 'package:local_ease/widgets/subscribed_card.dart';
 import 'package:local_ease/widgets/textfields.dart';
 import 'package:open_street_map_search_and_pick/open_street_map_search_and_pick.dart';
 
+import '../helpers/dialogs.dart';
+import '../models/notification.model.dart';
 import '../theme/colors.dart';
 import '../widgets/cards.dart';
 
@@ -40,6 +42,11 @@ class _NearYouPageState extends State<NearYouPage> {
   String collectionId = Credentials.ShopsCollectionId;
   late RealtimeSubscription subscription;
 
+  /// Notif subscription
+
+  String notifCollectionId = Credentials.NotificationCollectionId;
+  late RealtimeSubscription notifSubscription;
+
   List<Map<String, dynamic>> items = [];
 
   @override
@@ -48,6 +55,7 @@ class _NearYouPageState extends State<NearYouPage> {
     currentUserCall();
     loadItems();
     subscribe();
+    notif();
   }
 
   currentUserCall() async {
@@ -116,7 +124,7 @@ class _NearYouPageState extends State<NearYouPage> {
               log("Item Added");
               items.add(item);
             }
-          } else if (currentUser!.country == null && shop.isOpen == true) {
+          } else if (shop.isOpen == true) {
             log("Item Added but not of exact location");
             items.add(item);
           }
@@ -141,11 +149,58 @@ class _NearYouPageState extends State<NearYouPage> {
         }
       }
     });
+
+
+  }
+
+  void notif() async{
+    final myId = await APIs.instance.getUserID();
+
+    Realtime realtime2 = Realtime(client);
+
+    notifSubscription = realtime2.subscribe(
+        ['databases.$databaseId.collections.$notifCollectionId.documents']);
+
+    // listen to changes
+    notifSubscription.stream.listen((data) {
+      log("there is some change");
+      // data will consist of `events` and a `payload`
+      if (data.payload.isNotEmpty) {
+        log("there is some change");
+        if (data.events
+            .contains("databases.*.collections.*.documents.*.create")) {
+          var item = NotificationModel.fromJson(data.payload);
+          log("Item Added");
+          //items.add(item);  current as '648532544505f9fa08ea'
+          if (item.users!.contains(myId)) {
+            Dialogs.showNotificationDialog(context, item.title!, item.description!);
+          }
+
+          setState(() {});
+        } else if (data.events
+            .contains("databases.*.collections.*.documents.*.delete")) {
+          var item = data.payload;
+          log("item deleted");
+          //items.removeWhere((it) => it['\$id'] == item['\$id']);
+          setState(() {});
+        } else if (data.events
+            .contains("databases.*.collections.*.documents.*.update")) {
+          var item = data.payload;
+          log("item update");
+          // int idx = items.indexWhere((it) => it['\$id'] == item['\$id']);
+          // log("${idx} is the index");
+          // items[idx] = item;
+          // setState(() {});
+        }
+      }
+    });
+
   }
 
   @override
   void dispose() {
     subscription.close();
+    notifSubscription.close();
     super.dispose();
   }
 
@@ -154,7 +209,22 @@ class _NearYouPageState extends State<NearYouPage> {
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        title: Text("LocalEase"),
+        // title: Text("LocalEase"),
+        title: RichText(
+          text: TextSpan(
+            text: 'Local',
+            style: textTheme.titleLarge!.copyWith(
+              fontWeight: FontWeight.w600,
+                color: AppColors.black,),
+            /*defining default style is optional */
+            children: const <TextSpan>[
+              TextSpan(
+                text: 'Ease',
+                style: TextStyle(color: AppColors.pink),
+              ),
+            ],
+          ),
+        ),
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(AppBar().preferredSize.height),
           child: Padding(

@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:local_ease/helpers/dateTimeHelper.dart';
 import 'package:local_ease/helpers/dialogs.dart';
@@ -5,6 +6,7 @@ import 'package:local_ease/helpers/mapHelper.dart';
 import 'package:local_ease/theme/app-theme.dart';
 import 'package:local_ease/theme/colors.dart';
 import 'package:local_ease/utils/sizeConfig.dart';
+import 'package:local_ease/widgets/item_carousel_card.dart';
 import 'package:local_ease/widgets/itemstag.dart';
 
 import '../apis/APIs.dart';
@@ -19,8 +21,12 @@ class FullShopViewPage extends StatefulWidget {
 }
 
 class _FullShopViewPageState extends State<FullShopViewPage> {
+  int _current = 0;
+  final CarouselController _controller = CarouselController();
+
   @override
   Widget build(BuildContext context) {
+    List items = widget.current_obj['items'] ?? [];
     List outStock = widget.current_obj['outstock'] ?? [];
     List subscribers = widget.current_obj['subscribers'] ?? [];
     return Scaffold(
@@ -120,6 +126,56 @@ class _FullShopViewPageState extends State<FullShopViewPage> {
                       MyTag(flag: outStock.contains(item), name: item)
                   ],
                 ),
+
+                // Carousel Card for Items
+
+                widget.current_obj['isopen'] ? Column(
+                  children: [
+                    CarouselSlider(
+                      items: items.map((i) {
+                        return Builder(
+                          builder: (BuildContext context) {
+                            return ItemCarouselCard(name: i, flag: outStock.contains(i), photo: widget.current_obj['photo'], desc:  widget.current_obj['about'],);
+                          },
+                        );
+                      }).toList(),
+                      carouselController: _controller,
+                      options: CarouselOptions(
+                          autoPlay: true,
+                          autoPlayInterval: Duration(milliseconds: 2500),
+                          autoPlayAnimationDuration: Duration(milliseconds: 1200),
+                          enlargeCenterPage: true,
+                          aspectRatio: 16 / 6.7,
+                          enlargeFactor: 0.24,
+                          onPageChanged: (index, reason) {
+                            setState(() {
+                              _current = index;
+                            });
+                          }),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: items.asMap().entries.map((entry) {
+                        return GestureDetector(
+                          onTap: () => _controller.animateToPage(entry.key),
+                          child: Container(
+                            width: 10.0,
+                            height: 10.0,
+                            margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: (Theme.of(context).brightness == Brightness.dark
+                                    ? Colors.white
+                                    : AppColors.pink)
+                                    .withOpacity(_current == entry.key ? 0.9 : 0.4)),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ],
+                ) : Text("This store is closed now subscribe to know when it opens!"),
+
+
                 SizedBox(
                   height: 15,
                 ),

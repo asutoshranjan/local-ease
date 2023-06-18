@@ -19,7 +19,22 @@ class _SubscribedPageState extends State<SubscribedPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Your Favorite Picks"),
+        // title: Text("Your Favorite Picks"),
+        title: RichText(
+          text: TextSpan(
+            text: 'Your Favourite ',
+            style: textTheme.titleLarge!.copyWith(
+              fontWeight: FontWeight.w600,
+              color: AppColors.black,),
+            /*defining default style is optional */
+            children: const <TextSpan>[
+              TextSpan(
+                text: 'Picks',
+                style: TextStyle(color: AppColors.pink),
+              ),
+            ],
+          ),
+        ),
       ),
       body: FutureBuilder(
         future: APIs.instance.getSubscribedStore(),
@@ -40,6 +55,7 @@ class _SubscribedPageState extends State<SubscribedPage> {
               final data = snapshot.data as List<ShopModel>;
               if(data.isNotEmpty) {
                 return ListView.builder(
+                  physics: BouncingScrollPhysics(),
                     itemCount: data.length,
                     itemBuilder: (context, index) {
                       return MySubscriptionCard(current_obj:  data[index].toJson(),);

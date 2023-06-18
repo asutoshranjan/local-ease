@@ -47,7 +47,7 @@ class _HomePageState extends State<HomePage> {
         showUnselectedLabels: true,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.map),
+            icon: Icon(Icons.location_on_outlined, size: 29,),
             label: 'Near You',
           ),
           BottomNavigationBarItem(
