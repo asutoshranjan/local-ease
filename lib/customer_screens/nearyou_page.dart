@@ -1,11 +1,9 @@
-import 'dart:collection';
+
 import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:local_ease/apis/APIs.dart';
-import 'package:local_ease/customer_screens/notification_page.dart';
-import 'package:local_ease/customer_screens/select_from_map.dart';
 import 'package:local_ease/helpers/distanceCalculator.dart';
 import 'package:local_ease/main.dart';
 import 'package:appwrite/appwrite.dart';
@@ -14,7 +12,6 @@ import 'package:local_ease/models/user_model.dart';
 import 'package:local_ease/theme/app-theme.dart';
 import 'package:local_ease/utils/credentials.dart';
 import 'package:local_ease/utils/sizeConfig.dart';
-import 'package:local_ease/widgets/subscribed_card.dart';
 import 'package:local_ease/widgets/textfields.dart';
 import 'package:open_street_map_search_and_pick/open_street_map_search_and_pick.dart';
 
@@ -128,7 +125,6 @@ class _NearYouPageState extends State<NearYouPage> {
             log("Item Added but not of exact location");
             items.add(item);
           }
-
           // log("Item Added");
           // items.add(item);
           setState(() {});
@@ -171,7 +167,6 @@ class _NearYouPageState extends State<NearYouPage> {
             .contains("databases.*.collections.*.documents.*.create")) {
           var item = NotificationModel.fromJson(data.payload);
           log("Item Added");
-          //items.add(item);  current as '648532544505f9fa08ea'
           if (item.users!.contains(myId)) {
             Dialogs.showNotificationDialog(context, item.title!, item.description!);
           }
@@ -187,10 +182,6 @@ class _NearYouPageState extends State<NearYouPage> {
             .contains("databases.*.collections.*.documents.*.update")) {
           var item = data.payload;
           log("item update");
-          // int idx = items.indexWhere((it) => it['\$id'] == item['\$id']);
-          // log("${idx} is the index");
-          // items[idx] = item;
-          // setState(() {});
         }
       }
     });
@@ -230,13 +221,11 @@ class _NearYouPageState extends State<NearYouPage> {
           child: Padding(
             padding:  const EdgeInsets.only(left: 12, right: 12, bottom: 11),
             child: TextFieldInput(
-              // controller: phoneController,
-              // title: 'Phone',
               hintText: 'Search for any store here..',
               suffixIcon: txtQuery == ""
-                  ? SizedBox()
+                  ? const SizedBox()
                   : IconButton(
-                      icon: Icon(Icons.close),
+                      icon: const Icon(Icons.close),
                       onPressed: () {
                         txtQuery = "";
                         setState(() {});
@@ -392,7 +381,7 @@ class _NearYouPageState extends State<NearYouPage> {
 
                     if (resultShops.isNotEmpty) {
                       return ListView.builder(
-                        physics: BouncingScrollPhysics(),
+                        physics: const BouncingScrollPhysics(),
                         itemCount: resultShops.length,
                         itemBuilder: (context, index) {
                           ShopModel shop = resultShops[index];

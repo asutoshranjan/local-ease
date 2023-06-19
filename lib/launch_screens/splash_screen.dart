@@ -113,7 +113,23 @@ class _SplashScreenState extends State<SplashScreen> {
 
             Padding(
               padding:  EdgeInsets.only(bottom: 15),
-              child: Text("#Built with Appwrite"),
+              // child: Text("#Built with Appwrite"),
+              child: RichText(
+                text: TextSpan(
+                  text: '#Built with ',
+                  style: textTheme.displayMedium!.copyWith(
+                    fontSize: 18.4,
+                      color: AppColors.black,
+                      fontWeight: FontWeight.w500),
+                  /*defining default style is optional */
+                  children: const <TextSpan>[
+                    TextSpan(
+                      text: 'Appwrite',
+                      style: TextStyle(color: AppColors.pink),
+                    ),
+                  ],
+                ),
+              ),
             ),
 
           ],

@@ -43,7 +43,7 @@ class _MyCardsState extends State<MyCards> {
           decoration: BoxDecoration(
             color: AppColors.white,
 
-            boxShadow: [
+            boxShadow: const [
               BoxShadow(
               offset: Offset(2, 2),
           blurRadius: 12,
@@ -172,7 +172,7 @@ class _MyCardsState extends State<MyCards> {
                             ? TextButton(
                           style: ElevatedButton.styleFrom(backgroundColor: AppColors.tabGrey, foregroundColor:  AppColors.grey),
                           onPressed: () {},
-                          child: Text("Subscribed"),
+                          child: const Text("Subscribed"),
                         )
                             : TextButton(
                           onPressed: () async {
@@ -201,7 +201,7 @@ class _MyCardsState extends State<MyCards> {
                           ),
                         );
                       }
-                      return SizedBox();
+                      return const SizedBox();
                     }),
               ),
             ],

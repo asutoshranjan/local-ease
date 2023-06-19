@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:local_ease/apis/APIs.dart';
 import 'package:local_ease/customer_screens/full_shop_page.dart';
 import 'package:local_ease/theme/app-theme.dart';
 import 'package:local_ease/theme/colors.dart';
-
-import '../helpers/dialogs.dart';
 
 class MySubscriptionCard extends StatefulWidget {
   final Map<String, dynamic> current_obj;
@@ -18,7 +15,6 @@ class _MySubscriptionCardState extends State<MySubscriptionCard> {
 
   @override
   Widget build(BuildContext context) {
-    List subscribers = widget.current_obj['subscribers'] ?? [];
     return Padding(
       padding: const EdgeInsets.only(left: 10, right: 10, bottom: 12),
       child: GestureDetector(
@@ -32,7 +28,7 @@ class _MySubscriptionCardState extends State<MySubscriptionCard> {
               ));
         },
         child: Container(
-          foregroundDecoration: widget.current_obj['isopen'] ? BoxDecoration() :BoxDecoration(
+          foregroundDecoration: widget.current_obj['isopen'] ? const BoxDecoration() :BoxDecoration(
             color: Colors.grey,
             backgroundBlendMode: BlendMode.saturation,
             borderRadius: BorderRadius.circular(15),
@@ -40,7 +36,7 @@ class _MySubscriptionCardState extends State<MySubscriptionCard> {
           decoration: BoxDecoration(
             color: AppColors.white,
 
-            boxShadow: [
+            boxShadow: const [
               BoxShadow(
                 offset: Offset(2, 2),
                 blurRadius: 12,
@@ -126,7 +122,7 @@ class _MySubscriptionCardState extends State<MySubscriptionCard> {
                         fit: BoxFit.cover,
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
 

@@ -38,7 +38,7 @@ class _FullShopViewPageState extends State<FullShopViewPage> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
           child: Container(
-            foregroundDecoration: widget.current_obj['isopen'] ? BoxDecoration() :BoxDecoration(
+            foregroundDecoration: widget.current_obj['isopen'] ? const BoxDecoration() : const BoxDecoration(
               color: Colors.grey,
               backgroundBlendMode: BlendMode.saturation,
             ),
@@ -57,7 +57,7 @@ class _FullShopViewPageState extends State<FullShopViewPage> {
                           'https://imgv3.fotor.com/images/blog-cover-image/part-blurry-image.jpg',
                       fit: BoxFit.cover,
                     )),
-                SizedBox(
+                const SizedBox(
                   height: 15,
                 ),
                 Row(
@@ -73,7 +73,7 @@ class _FullShopViewPageState extends State<FullShopViewPage> {
                     ),
                     Row(
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.location_on_outlined,
                         ),
                         GestureDetector(
@@ -99,7 +99,7 @@ class _FullShopViewPageState extends State<FullShopViewPage> {
                     ),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 Text(
@@ -111,7 +111,7 @@ class _FullShopViewPageState extends State<FullShopViewPage> {
                   style: textTheme.displaySmall!
                       .copyWith(fontSize: SizeConfig.safeBlockHorizontal! * 4.5),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 15,
                 ),
                 Text(
@@ -142,8 +142,8 @@ class _FullShopViewPageState extends State<FullShopViewPage> {
                       carouselController: _controller,
                       options: CarouselOptions(
                           autoPlay: true,
-                          autoPlayInterval: Duration(milliseconds: 2500),
-                          autoPlayAnimationDuration: Duration(milliseconds: 1200),
+                          autoPlayInterval: const Duration(milliseconds: 2500),
+                          autoPlayAnimationDuration: const Duration(milliseconds: 1200),
                           enlargeCenterPage: true,
                           aspectRatio: 16 / 6.7,
                           enlargeFactor: 0.24,
@@ -161,7 +161,7 @@ class _FullShopViewPageState extends State<FullShopViewPage> {
                           child: Container(
                             width: 10.0,
                             height: 10.0,
-                            margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+                            margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
                             decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 color: (Theme.of(context).brightness == Brightness.dark
@@ -173,10 +173,10 @@ class _FullShopViewPageState extends State<FullShopViewPage> {
                       }).toList(),
                     ),
                   ],
-                ) : Text("This store is closed now subscribe to know when it opens!"),
+                ) : const Text("This store is closed now subscribe to know when it opens!"),
 
 
-                SizedBox(
+                const SizedBox(
                   height: 15,
                 ),
                 Text(
@@ -195,7 +195,7 @@ class _FullShopViewPageState extends State<FullShopViewPage> {
                       fontSize: SizeConfig.safeBlockHorizontal! * 4.3,
                       color: AppColors.orange),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 15,
                 ),
                 Text(
@@ -212,7 +212,7 @@ class _FullShopViewPageState extends State<FullShopViewPage> {
                   style: textTheme.displaySmall!
                       .copyWith(fontSize: SizeConfig.safeBlockHorizontal! * 4.3),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 30,
                 ),
                 Row(
@@ -282,7 +282,7 @@ class _FullShopViewPageState extends State<FullShopViewPage> {
                         }),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 50,
                 ),
               ],

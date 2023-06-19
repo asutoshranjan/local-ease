@@ -35,65 +35,10 @@ class _ProfilePageState extends State<ProfilePage> {
 
   String databaseId = Credentials.DatabaseId;
   String collectionId = Credentials.NotificationCollectionId;
-  late RealtimeSubscription subscription;
   String? photoUrl;
   var uuid = Uuid();
   final storage = Storage(client);
 
-  @override
-  void initState() {
-    super.initState();
-    subscribe();
-  }
-
-  void subscribe() async {
-    final myId = await APIs.instance.getUserID();
-
-    final realtime = Realtime(client);
-
-    subscription = realtime.subscribe(
-        ['databases.$databaseId.collections.$collectionId.documents']);
-
-    // listen to changes
-    subscription.stream.listen((data) {
-      log("there is some change");
-      // data will consist of `events` and a `payload`
-      if (data.payload.isNotEmpty) {
-        log("there is some change");
-        if (data.events
-            .contains("databases.*.collections.*.documents.*.create")) {
-          var item = NotificationModel.fromJson(data.payload);
-          log("Item Added");
-          //items.add(item);  current as '648532544505f9fa08ea'
-          if (item.users!.contains(myId)) {
-            Dialogs.showNotificationDialog(context, item.title!, item.description!);
-          }
-
-          setState(() {});
-        } else if (data.events
-            .contains("databases.*.collections.*.documents.*.delete")) {
-          var item = data.payload;
-          log("item deleted");
-          //items.removeWhere((it) => it['\$id'] == item['\$id']);
-          setState(() {});
-        } else if (data.events
-            .contains("databases.*.collections.*.documents.*.update")) {
-          var item = data.payload;
-          log("item update");
-          // int idx = items.indexWhere((it) => it['\$id'] == item['\$id']);
-          // log("${idx} is the index");
-          // items[idx] = item;
-          // setState(() {});
-        }
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    subscription.close();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -134,7 +79,7 @@ class _ProfilePageState extends State<ProfilePage> {
         ],
       ),
       body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
           child: Column(
@@ -228,7 +173,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   photoUrl ?? 'https://imgv3.fotor.com/images/blog-cover-image/part-blurry-image.jpg' ,
                                   fit: BoxFit.cover,
                                 )),
-                          ): Text("Photo not selected yet"),
+                          ): const Text("Photo not selected yet"),
                           const SizedBox(
                             height: 10,
                           ),
@@ -270,7 +215,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     setState(() {});
                                   });
                                 }).catchError((error) {
-                                  print(error.response);
+                                  log(error.response);
                                   Dialogs.showSnackbar(context, "${error}");
                                 });
                               } else {
@@ -285,7 +230,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                           Row(
                             children: [
-                              Spacer(),
+                              const Spacer(),
                               ElevatedButton(
                                 onPressed: () async {
                                   currentUser.name = nameController.text;

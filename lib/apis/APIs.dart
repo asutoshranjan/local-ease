@@ -108,7 +108,6 @@ class APIs {
 
   /// Database CRUD Operation Functions
 
-  // check if store exist and get value
 
   Future<ShopModel?> getStore() async {
     ShopModel? myShopModel;
@@ -158,15 +157,12 @@ class APIs {
 
 
 
-  // if docid == null create else update
-
-  // Create Store
+  /// Create Store
   Future<void> createShop({
     required ShopModel currentShop,
   }) async {
     try {
       await getUserID().then((userId) async {
-        String docId = uuid.v1();
         ShopModel myShop = currentShop;
         myShop.ownerId = userId;
         myShop.subscribers = [];
@@ -183,7 +179,7 @@ class APIs {
     }
   }
 
-  // Update Store
+  /// Update Store
   Future<void> updateShopInfo(ShopModel currentShop) async {
     try {
       await databases.updateDocument(
@@ -197,7 +193,7 @@ class APIs {
     }
   }
 
-  // Delete Account's Store
+  /// Delete Account's Store
   deleteShop(ShopModel currentShop) async {
     try {
       await databases.deleteDocument(
@@ -210,67 +206,8 @@ class APIs {
     }
   }
 
-  // Add a new notification
+  /// Add a new notification
   Future<void> createNotification(NotificationModel currentNotification) async{
-    // String docId = uuid.v1();
-
-    // try {
-    //
-    //   await databases.createDocument(
-    //     databaseId: Credentials.DatabaseId,
-    //     collectionId: "64888887b926a4ef24f5",
-    //     documentId: docId,
-    //     data: currentNotification.toJson(),
-    //   );
-    //
-    // } catch (e) {
-    //   rethrow;
-    // }
-
-    //todo: Set data in notif collection
-    //todo: Set the  notif id in users notif list
-
-
-    // ShopModel? myShop;
-    // await getUserID().then((userId) async {
-    //   await databases
-    //       .getDocument(
-    //     databaseId: Credentials.DatabaseId,
-    //     collectionId: Credentials.ShopsCollectionId,
-    //     documentId: userId!,
-    //   )
-    //       .then((value) async{
-    //     if (value.data != null) {
-    //       myShop = ShopModel.fromJson(value.data);
-    //       String docId = uuid.v1();
-    //       NotificationModel myNotification = currentNotification;
-    //       myNotification.notificationId = docId;
-    //       myNotification.shopid = myShop!.ownerId;
-    //       myNotification.users = myShop!.subscribers;
-    //       await databases.createDocument(
-    //         databaseId: Credentials.DatabaseId,
-    //         collectionId: Credentials.NotificationCollectionId,
-    //         documentId: docId,
-    //         data: myNotification.toJson(),
-    //       );
-    //       log("Notif sent");
-    //     }
-    //   });
-    // });
-
-    // ShopModel? myShop = await getStore();
-    // String docId = uuid.v1();
-    //      NotificationModel myNotification = currentNotification;
-    //      myNotification.notificationId = docId;
-    //      myNotification.shopid = myShop!.ownerId;
-    //      myNotification.users = myShop.subscribers;
-    //      await databases.createDocument(
-    //              databaseId: Credentials.DatabaseId,
-    //              collectionId: Credentials.NotificationCollectionId,
-    //              documentId: ID.unique(),
-    //              data: myNotification.toJson(),
-    //            );
-
 
      getStore().then((myShop) async{
           String docId = uuid.v1();
@@ -302,8 +239,8 @@ class APIs {
 
   }
 
-  // Subscribe
 
+  /// Subscribe
   Future<void> subscribe(String shopId, List subscribers) async {
     try {
       // add to shop subscription list
@@ -372,7 +309,7 @@ class APIs {
     }
   }
 
-  // For getting users subscribed stores
+  /// For getting users subscribed stores
 
   Future<List<ShopModel>> getSubscribedStore() async {
     List<ShopModel> myStores = [];
@@ -397,7 +334,7 @@ class APIs {
     return myStores;
   }
 
-  // For getting subscribed users
+  /// For getting subscribed users
 
   Future<List<MyUserModel>> getSubscribedUsers() async {
     List<MyUserModel> myUsers = [];
@@ -420,7 +357,7 @@ class APIs {
     return myUsers;
   }
 
-  // get user
+  /// get user
 
   Future<MyUserModel?> getUser() async {
     MyUserModel? currentUser;
@@ -444,7 +381,7 @@ class APIs {
     return currentUser;
   }
 
-  // Create New User
+  /// Create New User
   Future<void> createUser({
     required String type,
   }) async {
@@ -540,7 +477,7 @@ class APIs {
       String fileName = result.files.single.name;
 
       Future result2 = storage.createFile(
-        bucketId: Credentials.PhotosBucketId, //eihieiofhhiqhi
+        bucketId: Credentials.PhotosBucketId,
         fileId: id,
         file: InputFile(
           path: file.path,
@@ -551,7 +488,7 @@ class APIs {
         log("Pic Uploaded");
         return 'https://cloud.appwrite.io/v1/storage/buckets/${Credentials.PhotosBucketId}/files/${id}/view?project=${Credentials.ProjectID}';
       }).catchError((error) {
-        print(error.response);
+        log(error.response);
         Dialogs.showSnackbar(context, "${error}");
       });
     } else {

@@ -72,6 +72,7 @@ abstract class AppTheme {
         backgroundColor: AppColors.white,
         elevation: 0,
         selectedItemColor: AppColors.black,
-        unselectedItemColor: AppColors.grey),
+        unselectedItemColor: AppColors.grey,
+    ),
   );
 }

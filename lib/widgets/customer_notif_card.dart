@@ -48,7 +48,7 @@ class _CustomerNotifCardState extends State<CustomerNotifCard> {
                   children: [
                     Text(widget.myNotif.title ?? "", maxLines: 1, overflow: TextOverflow.ellipsis, style: textTheme.titleMedium!.copyWith(fontSize: SizeConfig.safeBlockHorizontal! * 4.2, color: AppColors.orange),),
                     Text(widget.myNotif.description ?? "",maxLines: 2, overflow: TextOverflow.ellipsis, style: textTheme.displayMedium!.copyWith(fontSize: SizeConfig.safeBlockHorizontal! * 3.8,),),
-                    Spacer(),
+                    const Spacer(),
                     FutureBuilder(
                       future: APIs.instance.getStoreById(widget.myNotif.shopid!),
                       builder: (ctx, snapshot) {
@@ -101,7 +101,7 @@ class _CustomerNotifCardState extends State<CustomerNotifCard> {
                             );
                           }
                         }
-                        return SizedBox();
+                        return const SizedBox();
                       },
                     ),
 

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:local_ease/apis/APIs.dart';
 import 'package:local_ease/customer_screens/home_page.dart';
-import 'package:local_ease/models/user_model.dart';
 import 'package:local_ease/seller_screens/home_page.dart';
 
 class ChooseAccountType extends StatefulWidget {
@@ -16,7 +15,7 @@ class _ChooseAccountTypeState extends State<ChooseAccountType> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Tell Us About You"),
+        title: const Text("Tell Us About You"),
       ),
       body: Padding(
         padding: const EdgeInsets.all(15),
@@ -34,8 +33,8 @@ class _ChooseAccountTypeState extends State<ChooseAccountType> {
                          ));
                    });
                 },
-                child: Text("I want to search shops and items")),
-            SizedBox(height: 15,),
+                child: const Text("I want to search shops and items")),
+            const SizedBox(height: 15,),
             ElevatedButton(
                 onPressed: () async{
                     await APIs.instance.createUser(type: "Seller" ).then((value) {
@@ -46,7 +45,7 @@ class _ChooseAccountTypeState extends State<ChooseAccountType> {
                           ));
                     });
                 },
-                child: Text("I want to list my shop")),
+                child: const Text("I want to list my shop")),
           ],
         ),
       ),

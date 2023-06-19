@@ -24,7 +24,7 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Sign Up"),
+        title: const Text("Sign Up"),
         centerTitle: true,
       ),
       body: Padding(
@@ -103,9 +103,9 @@ class _SignUpPageState extends State<SignUpPage> {
                   Dialogs.showSnackbar(context, e.toString());
                 }
               },
-              child: Text("Sign Up"),
+              child: const Text("Sign Up"),
             ),
-            SizedBox(height: 20,),
+            const SizedBox(height: 20,),
             InkWell(
               onTap: (){
                 Navigator.pushReplacement(
@@ -115,7 +115,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                 );
               },
-              child: Text("Already have an account? Login"),
+              child: const Text("Already have an account? Login"),
             ),
           ],
         ),

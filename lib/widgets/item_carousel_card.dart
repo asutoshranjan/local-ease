@@ -53,7 +53,7 @@ class _ItemCarouselCardState extends State<ItemCarouselCard> {
             const Spacer(),
             Container(
               width: SizeConfig.safeBlockHorizontal!* 40,
-              margin: EdgeInsets.only(top: 5, bottom: 5),
+              margin: const EdgeInsets.only(top: 5, bottom: 5),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -70,7 +70,7 @@ class _ItemCarouselCardState extends State<ItemCarouselCard> {
                     overflow: TextOverflow.ellipsis,
                     style: textTheme.displayMedium!.copyWith(fontSize: SizeConfig.safeBlockHorizontal!*3.7),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   Text(
                     widget.flag ? "Out Stock" : "In Stock",
                     style: textTheme.titleMedium!.copyWith(

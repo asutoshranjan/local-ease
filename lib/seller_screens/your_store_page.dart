@@ -7,14 +7,10 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:local_ease/apis/APIs.dart';
-import 'package:local_ease/helpers/dateTimeHelper.dart';
-import 'package:local_ease/models/item_model.dart';
 import 'package:local_ease/models/shop_model.dart';
-import 'package:local_ease/seller_screens/manage_store_items.dart';
 import 'package:local_ease/theme/app-theme.dart';
 import 'package:local_ease/theme/colors.dart';
 import 'package:local_ease/utils/sizeConfig.dart';
-import 'package:local_ease/widgets/itemstag.dart';
 import 'package:local_ease/widgets/textfields.dart';
 import 'package:open_street_map_search_and_pick/open_street_map_search_and_pick.dart';
 import 'package:uuid/uuid.dart';
@@ -95,12 +91,12 @@ class _StoreListingPageState extends State<StoreListingPage> {
     return Scaffold(
         appBar: isOpen != null
             ? AppBar(
-                title: Text("Manage Your Store"),
+                title: const Text("Manage Your Store"),
                 bottom: PreferredSize(
                   preferredSize: Size.fromHeight(AppBar().preferredSize.height),
                   child: Row(
                     children: [
-                      SizedBox(width: 15),
+                      const SizedBox(width: 15),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
@@ -154,7 +150,7 @@ class _StoreListingPageState extends State<StoreListingPage> {
                           child: Text("Opened"),
                         ),
                       ),
-                      SizedBox(width: 25),
+                      const SizedBox(width: 25),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
@@ -212,7 +208,7 @@ class _StoreListingPageState extends State<StoreListingPage> {
                 ),
               )
             : AppBar(
-                title: Text("Open your store now"),
+                title: const Text("Open your store now"),
               ),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -290,9 +286,9 @@ class _StoreListingPageState extends State<StoreListingPage> {
                             child: Center(
                                 child: Row(
                               children: [
-                                SizedBox(width: 6),
-                                Icon(Icons.location_on_outlined),
-                                SizedBox(width: 8),
+                                const SizedBox(width: 6),
+                                const Icon(Icons.location_on_outlined),
+                                const SizedBox(width: 8),
                                 SizedBox(
                                   width: 280,
                                   child: Text(
@@ -351,7 +347,7 @@ class _StoreListingPageState extends State<StoreListingPage> {
                             child: Image.network(
                               photoUrl ?? 'https://imgv3.fotor.com/images/blog-cover-image/part-blurry-image.jpg' ,
                               fit: BoxFit.cover,
-                            )): Text("Photo not selected yet"),
+                            )): const Text("Photo not selected yet"),
                         const SizedBox(
                           height: 10,
                         ),
@@ -387,7 +383,7 @@ class _StoreListingPageState extends State<StoreListingPage> {
                                 setState(() {});
                                 Dialogs.showSnackbar(context, "Picture updated successfully! Update to save");
                               }).catchError((error) {
-                                print(error.response);
+                                log(error.response);
                                 Dialogs.showSnackbar(context, "${error}");
                               });
                             } else {
@@ -419,7 +415,7 @@ class _StoreListingPageState extends State<StoreListingPage> {
                             ? Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 20,
                                   ),
                                   Text(
@@ -432,7 +428,7 @@ class _StoreListingPageState extends State<StoreListingPage> {
                                           letterSpacing: 0.1,
                                         ),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 12,
                                   ),
                                   Text(
@@ -447,7 +443,7 @@ class _StoreListingPageState extends State<StoreListingPage> {
                                   ),
                                 ],
                               )
-                            : SizedBox(),
+                            : const SizedBox(),
                         const SizedBox(
                           height: 25,
                         ),
@@ -505,7 +501,7 @@ class _StoreListingPageState extends State<StoreListingPage> {
                         ),
                         Row(
                           children: [
-                            Spacer(),
+                            const Spacer(),
                             ElevatedButton(
                                 child: Text('Add'),
                                 onPressed: () {
@@ -521,7 +517,7 @@ class _StoreListingPageState extends State<StoreListingPage> {
                         Container(
                           height: 320,
                           child: ListView(
-                            physics: BouncingScrollPhysics(),
+                            physics: const BouncingScrollPhysics(),
                             children: [
                               for (var str in storesItem)
                                 Container(
@@ -550,7 +546,7 @@ class _StoreListingPageState extends State<StoreListingPage> {
                                                     outStock.remove(str);
                                                     setState(() {});
                                                   },
-                                                  icon: Icon(
+                                                  icon: const Icon(
                                                     CupertinoIcons.xmark_circle,
                                                     color: AppColors.orange,
                                                   ),
@@ -560,7 +556,7 @@ class _StoreListingPageState extends State<StoreListingPage> {
                                                     outStock.add(str);
                                                     setState(() {});
                                                   },
-                                                  icon: Icon(
+                                                  icon: const Icon(
                                                     CupertinoIcons
                                                         .check_mark_circled,
                                                     color: AppColors.green,
@@ -571,7 +567,7 @@ class _StoreListingPageState extends State<StoreListingPage> {
                                               storesItem.remove(str);
                                               setState(() {});
                                             },
-                                            icon: Icon(
+                                            icon: const Icon(
                                               CupertinoIcons.delete,
                                               color: AppColors.red,
                                             ),
@@ -643,7 +639,7 @@ class _StoreListingPageState extends State<StoreListingPage> {
                               });
                             }
                           },
-                          child: Text("Launch Store"),
+                          child: const Text("Launch Store"),
                         ),
                         const SizedBox(
                           height: 40,
@@ -670,12 +666,6 @@ class _StoreListingPageState extends State<StoreListingPage> {
                             ),
                             GestureDetector(
                               onTap: () {
-                                // Navigator.push(
-                                //     context,
-                                //     MaterialPageRoute(
-                                //       builder: (context) => ChooseShopFromMap(),
-                                //     ));
-
                                 showDialog(
                                   barrierDismissible: false,
                                   context: context,
@@ -728,9 +718,9 @@ class _StoreListingPageState extends State<StoreListingPage> {
                                 child: Center(
                                     child: Row(
                                   children: [
-                                    SizedBox(width: 6),
-                                    Icon(Icons.location_on_outlined),
-                                    SizedBox(width: 8),
+                                    const SizedBox(width: 6),
+                                    const Icon(Icons.location_on_outlined),
+                                    const SizedBox(width: 8),
                                     SizedBox(
                                       width: 280,
                                       child: Text(
@@ -789,7 +779,7 @@ class _StoreListingPageState extends State<StoreListingPage> {
                                  child: Image.network(
                                    photoUrl ?? 'https://imgv3.fotor.com/images/blog-cover-image/part-blurry-image.jpg' ,
                                    fit: BoxFit.cover,
-                                 )): Text("Photo not selected yet"),
+                                 )): const Text("Photo not selected yet"),
                             const SizedBox(
                              height: 10,
                             ),
@@ -858,7 +848,7 @@ class _StoreListingPageState extends State<StoreListingPage> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 20,
                                       ),
                                       Text(
@@ -872,7 +862,7 @@ class _StoreListingPageState extends State<StoreListingPage> {
                                               letterSpacing: 0.1,
                                             ),
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 12,
                                       ),
                                       Text(
@@ -887,7 +877,7 @@ class _StoreListingPageState extends State<StoreListingPage> {
                                       ),
                                     ],
                                   )
-                                : SizedBox(),
+                                : const SizedBox(),
                             const SizedBox(
                               height: 25,
                             ),
@@ -947,9 +937,9 @@ class _StoreListingPageState extends State<StoreListingPage> {
                             ),
                             Row(
                               children: [
-                                Spacer(),
+                                const Spacer(),
                                 ElevatedButton(
-                                    child: Text('Add'),
+                                    child: const Text('Add'),
                                     onPressed: () {
                                       log("Adding item ${addItemController.text} and ${storesItem.length}");
                                       storesItem.add(addItemController.text);
@@ -964,14 +954,14 @@ class _StoreListingPageState extends State<StoreListingPage> {
                               height: SizeConfig.safeBlockHorizontal! * 40,
                               width: SizeConfig.safeBlockHorizontal! * 90,
                               child: ListView(
-                                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+                                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
                                 scrollDirection: Axis.horizontal,
-                                physics: BouncingScrollPhysics(),
+                                physics: const BouncingScrollPhysics(),
                                 children: [
                                   for (var str in storesItem)
                                     Container(
                                       width: SizeConfig.safeBlockHorizontal! * 80,
-                                      margin: EdgeInsets.only(right: 16),
+                                      margin: const EdgeInsets.only(right: 16),
                                       decoration: BoxDecoration(
                                         color: AppColors.white,
                                         border:
@@ -1023,7 +1013,7 @@ class _StoreListingPageState extends State<StoreListingPage> {
                                                                     outStock.remove(str);
                                                                     setState(() {});
                                                                   },
-                                                                  icon: Icon(
+                                                                  icon: const Icon(
                                                                     CupertinoIcons
                                                                         .xmark_circle,
                                                                     color: AppColors.orange,
@@ -1034,7 +1024,7 @@ class _StoreListingPageState extends State<StoreListingPage> {
                                                                     outStock.add(str);
                                                                     setState(() {});
                                                                   },
-                                                                  icon: Icon(
+                                                                  icon: const Icon(
                                                                     CupertinoIcons
                                                                         .check_mark_circled,
                                                                     color: AppColors.green,
@@ -1045,7 +1035,7 @@ class _StoreListingPageState extends State<StoreListingPage> {
                                                               storesItem.remove(str);
                                                               setState(() {});
                                                             },
-                                                            icon: Icon(
+                                                            icon: const Icon(
                                                               CupertinoIcons.delete,
                                                               color: AppColors.red,
                                                             ),
@@ -1064,152 +1054,6 @@ class _StoreListingPageState extends State<StoreListingPage> {
                                 ],
                               ),
                             ),
-
-                            // Add Item with Item Model
-                            // ElevatedButton(
-                            //   onPressed: () {
-                            //     String name = "";
-                            //     String desc = "";
-                            //     String photo = "";
-                            //
-                            //     // passIt( NotificationModel myNotif) async {
-                            //     //   await APIs.instance
-                            //     //       .createNotification(myNotif)
-                            //     //       .then((value) {
-                            //     //     btn = true;
-                            //     //     setState(() {});
-                            //     //     updateUI();
-                            //     //   });
-                            //     //
-                            //     // }
-                            //
-                            //     showDialog(
-                            //       barrierDismissible: false,
-                            //       context: context,
-                            //       builder: (BuildContext context) {
-                            //         bool clk2 = false;
-                            //         return Material(
-                            //           child: Container(
-                            //             color: AppColors.scaffoldBackGround,
-                            //             padding: const EdgeInsets.all(16.0),
-                            //             width: double.infinity,
-                            //             height: double.infinity,
-                            //             child: Column(
-                            //               children: <Widget>[
-                            //                 Container(
-                            //                   height: 20,
-                            //                 ),
-                            //                 TextFieldInput(
-                            //                   title: 'Name',
-                            //                   hintText: 'Enter name of item',
-                            //                   maxLength: 30,
-                            //                   onChanged: (val) {
-                            //                     name = val;
-                            //                   },
-                            //                 ),
-                            //                 Container(
-                            //                   height: 10,
-                            //                 ),
-                            //                 TextFieldInput(
-                            //                   title: 'Description',
-                            //                   hintText: 'Item Description',
-                            //                   maxLines: 4,
-                            //                   maxLength: 200,
-                            //                   onChanged: (val) {
-                            //                     desc = val;
-                            //                   },
-                            //                 ),
-                            //                 Container(
-                            //                   height: 5,
-                            //                 ),
-                            //                 TextFieldInput(
-                            //                   title: 'Photo Link',
-                            //                   hintText:
-                            //                       'Paste link of item image here',
-                            //                   onChanged: (val) {
-                            //                     photo = val;
-                            //                   },
-                            //                 ),
-                            //                 SizedBox(
-                            //                   height: 15,
-                            //                 ),
-                            //                 Row(
-                            //                   children: <Widget>[
-                            //                     Spacer(),
-                            //                     TextButton(
-                            //                         child: Text('Discard'),
-                            //                         onPressed: () {
-                            //                           Navigator.of(context)
-                            //                               .pop();
-                            //                         }),
-                            //                     SizedBox(
-                            //                       width: 20,
-                            //                     ),
-                            //                     TextButton(
-                            //                       child:
-                            //                           Text('Add'),
-                            //                       onPressed: () async {
-                            //                         String id = uuid.v1();
-                            //
-                            //                         ItemModel myItem =
-                            //                             ItemModel(
-                            //                           name: name,
-                            //                           description: desc,
-                            //                           photo: photo,
-                            //                           itemId: id,
-                            //                         );
-                            //
-                            //                         // Dialogs.showLoaderDialog(context, "Saving");
-                            //
-                            //                         try {
-                            //                           await APIs.databases
-                            //                               .createDocument(
-                            //                             databaseId: Credentials
-                            //                                 .DatabaseId,
-                            //                             collectionId: Credentials
-                            //                                 .ItemsCollectonId,
-                            //                             documentId: id,
-                            //                             data: myItem.toJson(),
-                            //                           ).then((value) {
-                            //                               storesItem.add(id);
-                            //                               Navigator.pop(context);
-                            //                               Dialogs.showOpenCloseDialog(context: context, onBtnClk: () {
-                            //                                 setState(() {}); }, title: "New item added!", description: "You store gota new item added to save it you need to update store details", icon: Icons.done );
-                            //                           });
-                            //                         } catch (e) {
-                            //                           Dialogs.showSnackbar(context, "${e}");
-                            //                         }
-                            //                       },
-                            //                     ),
-                            //                   ],
-                            //                 ),
-                            //               ],
-                            //             ),
-                            //           ),
-                            //         );
-                            //       },
-                            //     );
-                            //   },
-                            //   child: Text("Add Item"),
-                            // ),
-
-                            // Container(
-                            //   height: 100,
-                            //   width: 200,
-                            //   child: ListView.builder(
-                            //     scrollDirection: Axis.horizontal,
-                            //     itemCount: storesItemId.length,
-                            //     itemBuilder: (context, index) {
-                            //       return Padding(
-                            //         padding: const EdgeInsets.all(8.0),
-                            //         child: Container(
-                            //           color: Colors.red,
-                            //           child: Text(storesItemId[index]),
-                            //         ),
-                            //       );
-                            //     },
-                            //   ),
-                            // ),
 
                             const SizedBox(
                               height: 20,
@@ -1267,14 +1111,14 @@ class _StoreListingPageState extends State<StoreListingPage> {
                                       .createShop(currentShop: newShop);
                                 }
                               },
-                              child: Text("Update Details"),
+                              child: const Text("Update Details"),
                             ),
                             const SizedBox(
                               height: 40,
                             ),
                           ]
                         : [
-                            Text("Closed"),
+                            const Text("Closed"),
                             const SizedBox(
                               height: 20,
                             ),
@@ -1293,11 +1137,6 @@ class _StoreListingPageState extends State<StoreListingPage> {
                             ),
                             GestureDetector(
                               onTap: () {
-                                // Navigator.push(
-                                //     context,
-                                //     MaterialPageRoute(
-                                //       builder: (context) => ChooseShopFromMap(),
-                                //     ));
 
                                 showDialog(
                                   barrierDismissible: false,
@@ -1351,9 +1190,9 @@ class _StoreListingPageState extends State<StoreListingPage> {
                                 child: Center(
                                     child: Row(
                                   children: [
-                                    SizedBox(width: 6),
-                                    Icon(Icons.location_on_outlined),
-                                    SizedBox(width: 8),
+                                    const SizedBox(width: 6),
+                                    const Icon(Icons.location_on_outlined),
+                                    const SizedBox(width: 8),
                                     SizedBox(
                                       width: 280,
                                       child: Text(
@@ -1412,7 +1251,7 @@ class _StoreListingPageState extends State<StoreListingPage> {
                                 child: Image.network(
                                   photoUrl ?? 'https://imgv3.fotor.com/images/blog-cover-image/part-blurry-image.jpg' ,
                                   fit: BoxFit.cover,
-                                )): Text("Photo not selected yet"),
+                                )): const Text("Photo not selected yet"),
                             const SizedBox(
                               height: 10,
                             ),
@@ -1481,7 +1320,7 @@ class _StoreListingPageState extends State<StoreListingPage> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 20,
                                       ),
                                       Text(
@@ -1495,7 +1334,7 @@ class _StoreListingPageState extends State<StoreListingPage> {
                                               letterSpacing: 0.1,
                                             ),
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 12,
                                       ),
                                       Text(
@@ -1510,7 +1349,7 @@ class _StoreListingPageState extends State<StoreListingPage> {
                                       ),
                                     ],
                                   )
-                                : SizedBox(),
+                                : const SizedBox(),
                             const SizedBox(
                               height: 25,
                             ),
@@ -1570,9 +1409,9 @@ class _StoreListingPageState extends State<StoreListingPage> {
                             ),
                             Row(
                               children: [
-                                Spacer(),
+                               const Spacer(),
                                 ElevatedButton(
-                                    child: Text('Add'),
+                                    child: const Text('Add'),
                                     onPressed: () {
                                       log("Adding item ${addItemController.text} and ${storesItem.length}");
                                       storesItem.add(addItemController.text);
@@ -1616,7 +1455,7 @@ class _StoreListingPageState extends State<StoreListingPage> {
                                                         outStock.remove(str);
                                                         setState(() {});
                                                       },
-                                                      icon: Icon(
+                                                      icon: const Icon(
                                                         CupertinoIcons
                                                             .xmark_circle,
                                                         color: AppColors.orange,
@@ -1627,7 +1466,7 @@ class _StoreListingPageState extends State<StoreListingPage> {
                                                         outStock.add(str);
                                                         setState(() {});
                                                       },
-                                                      icon: Icon(
+                                                      icon: const Icon(
                                                         CupertinoIcons
                                                             .check_mark_circled,
                                                         color: AppColors.green,
@@ -1638,7 +1477,7 @@ class _StoreListingPageState extends State<StoreListingPage> {
                                                   storesItem.remove(str);
                                                   setState(() {});
                                                 },
-                                                icon: Icon(
+                                                icon: const Icon(
                                                   CupertinoIcons.delete,
                                                   color: AppColors.red,
                                                 ),

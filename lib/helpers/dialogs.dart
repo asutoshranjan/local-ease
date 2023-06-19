@@ -30,13 +30,13 @@ class Dialogs {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 33,
                 ),
                 Text(title, textAlign: TextAlign.center,),
-                SizedBox(height: 5,),
+                const SizedBox(height: 5,),
                 Text(description, textAlign: TextAlign.center, style: textTheme.displaySmall!.copyWith(fontSize: SizeConfig.safeBlockHorizontal!*4.3),),
-                Spacer(),
+                const Spacer(),
                 TextButton(
                   onPressed: (){
                     Navigator.pop(context);
@@ -81,13 +81,13 @@ class Dialogs {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 33,
                 ),
                 Text(title, textAlign: TextAlign.center,),
-                SizedBox(height: 5,),
+                const SizedBox(height: 5,),
                 Text(description, textAlign: TextAlign.center, style: textTheme.displaySmall!.copyWith(fontSize: SizeConfig.safeBlockHorizontal!*4.3),),
-                Spacer(),
+                const Spacer(),
                 TextButton(
                   onPressed: onBtnClk,
                   child: Text("Confirm"),

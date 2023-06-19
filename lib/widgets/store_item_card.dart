@@ -16,7 +16,7 @@ class _StoreItemCardState extends State<StoreItemCard> {
     return Container(
       width: double.infinity,
       height: 70,
-      margin: EdgeInsets.only(left: 15, right: 15, bottom: 16),
+      margin: const EdgeInsets.only(left: 15, right: 15, bottom: 16),
       decoration: BoxDecoration(
         color: AppColors.white,
         border: Border.all(color: AppColors.grey),
@@ -31,8 +31,8 @@ class _StoreItemCardState extends State<StoreItemCard> {
           ),
           Row(
             children: [
-              IconButton(onPressed: (){}, icon: Icon(CupertinoIcons.xmark_circle),),
-              IconButton(onPressed: (){}, icon: Icon(CupertinoIcons.delete),),
+              IconButton(onPressed: (){}, icon: const Icon(CupertinoIcons.xmark_circle),),
+              IconButton(onPressed: (){}, icon: const Icon(CupertinoIcons.delete),),
             ],
           ),
         ],

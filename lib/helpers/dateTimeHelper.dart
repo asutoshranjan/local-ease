@@ -15,10 +15,6 @@ class DateTimeHelper{
   static String closingTime(String datetime) {
     List arr = datetime.split(" ");
     String time = arr[1];
-    List datebrk = arr[0].split("-");
-    String day = datebrk[2];
-    String month = DateFormat('MMM').format(DateTime(0, int.parse(datebrk[1])));
-    String year = datebrk[0];
 
     return "$time";
   }

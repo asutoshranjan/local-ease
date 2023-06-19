@@ -222,7 +222,7 @@ class _SellerAccountPageState extends State<SellerAccountPage> {
                           ),
                           Row(
                             children: [
-                              Spacer(),
+                              const Spacer(),
                               ElevatedButton(
                                 onPressed: () async {
                                   currentUser.name = nameController.text;

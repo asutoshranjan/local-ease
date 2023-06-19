@@ -25,7 +25,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Login"),
+        title: const Text("Login"),
         centerTitle: true,
       ),
       body: Padding(
@@ -111,9 +111,9 @@ class _LoginPageState extends State<LoginPage> {
                   Dialogs.showSnackbar(context, e.toString());
                 }
               },
-              child: Text("Login"),
+              child: const Text("Login"),
             ),
-            SizedBox(height: 20,),
+            const SizedBox(height: 20,),
             InkWell(
               onTap: (){
                 Navigator.pushReplacement(
@@ -123,7 +123,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 );
               },
-              child: Text("Don't have an account? Sign up"),
+              child: const Text("Don't have an account? Sign up"),
             ),
           ],
         ),

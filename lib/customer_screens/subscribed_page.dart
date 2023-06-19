@@ -3,7 +3,6 @@ import 'package:local_ease/apis/APIs.dart';
 import 'package:local_ease/models/shop_model.dart';
 import 'package:local_ease/theme/app-theme.dart';
 import 'package:local_ease/theme/colors.dart';
-import 'package:local_ease/widgets/cards.dart';
 
 import '../widgets/subscribed_card.dart';
 
@@ -70,7 +69,7 @@ class _SubscribedPageState extends State<SubscribedPage> {
 
             }
           }
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         },
       ),
     );

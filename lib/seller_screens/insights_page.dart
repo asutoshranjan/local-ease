@@ -56,7 +56,7 @@ class _InsightsPageState extends State<InsightsPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(
+            const SizedBox(
               height: 6,
             ),
 
@@ -78,8 +78,8 @@ class _InsightsPageState extends State<InsightsPage> {
                         height: SizeConfig.safeBlockVertical! * 20,
                         child: ListView.builder(
                             scrollDirection: Axis.horizontal,
-                            physics: BouncingScrollPhysics(),
-                            padding: EdgeInsets.symmetric(vertical: 13),
+                            physics: const BouncingScrollPhysics(),
+                            padding: const EdgeInsets.symmetric(vertical: 13),
                             itemCount: myNotifs.length,
                             itemBuilder: (context, index) {
                               return Padding(
@@ -105,28 +105,17 @@ class _InsightsPageState extends State<InsightsPage> {
             ),
 
             // NotificationCard(),
-            SizedBox(
+            const SizedBox(
               height: 6,
             ),
             Row(
               children: [
-                Spacer(),
+                const Spacer(),
                 ElevatedButton(
                   onPressed: () {
                     String name = "";
                     String desc = "";
                     String photo = "";
-
-                    // passIt( NotificationModel myNotif) async {
-                    //   await APIs.instance
-                    //       .createNotification(myNotif)
-                    //       .then((value) {
-                    //     btn = true;
-                    //     setState(() {});
-                    //     updateUI();
-                    //   });
-                    //
-                    // }
 
                     showDialog(
                       barrierDismissible: false,
@@ -174,18 +163,18 @@ class _InsightsPageState extends State<InsightsPage> {
                                     photo = val;
                                   },
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 15,
                                 ),
                                 Row(
                                   children: <Widget>[
-                                    Spacer(),
+                                    const Spacer(),
                                     TextButton(
                                         child: Text('Discard'),
                                         onPressed: () {
                                           Navigator.of(context).pop();
                                         }),
-                                    SizedBox(
+                                    const SizedBox(
                                       width: 20,
                                     ),
                                     TextButton(
@@ -225,7 +214,7 @@ class _InsightsPageState extends State<InsightsPage> {
                 ),
               ],
             ),
-            SizedBox(height: 6),
+            const SizedBox(height: 6),
             FutureBuilder(
               future: APIs.instance.getSubscribedUsers(),
               builder: (context, snapshot) {
@@ -285,7 +274,7 @@ class _InsightsPageState extends State<InsightsPage> {
                     );
                   }
                 }
-                return Center(child: CircularProgressIndicator());
+                return const Center(child: CircularProgressIndicator());
               },
             )
           ],
