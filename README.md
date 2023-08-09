@@ -1,7 +1,9 @@
 # LocalEase
 
 Building an online store platform using Appwrite and Flutter.
-[Blog](https://asutosh.hashnode.dev/building-an-online-store-platform-using-appwrite-and-flutter-localease)
+
+### Resources:
+[Blog](https://asutosh.hashnode.dev/building-an-online-store-platform-using-appwrite-and-flutter-localease)\
 [Tutorial](https://youtu.be/APp9dHVvmPg)
 
 # About App
