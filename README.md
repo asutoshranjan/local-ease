@@ -58,3 +58,8 @@ an online store platform connecting users with local shops and small businesses.
 
 - Check that an Android device is running by running `flutter devices`. If none are shown, follow the device-specific instructions on the [Install](https://flutter.dev/docs/get-started/install) page for your OS.
 - Run the app with the following command: `flutter run`
+
+
+<a href="https://github.com/sponsors/asutoshranjan/button" target="_blank">
+  <img src="https://img.shields.io/badge/Sponsor-asutoshranjan-pink" alt="Sponsor asutoshranjan" />
+</a>
